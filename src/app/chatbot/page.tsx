@@ -1,21 +1,21 @@
 // Enhanced Chatbot UI with fixed mobile nav spacing
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { logout } from '@/lib/auth';
-import Cookies from 'js-cookie';
-import { Menu } from 'lucide-react';
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { logout } from "@/lib/auth";
+import Cookies from "js-cookie";
+import { Menu } from "lucide-react";
 
 interface Message {
-  sender: 'user' | 'bot';
+  sender: "user" | "bot";
   content: string;
 }
 
 export default function ChatbotPage() {
   const router = useRouter();
   const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
   const [authChecked, setAuthChecked] = useState(false);
@@ -23,9 +23,10 @@ export default function ChatbotPage() {
 
   useEffect(() => {
     const isLoggedIn =
-      sessionStorage.getItem('cyberlegal-auth') || Cookies.get('cyberlegal-auth');
+      sessionStorage.getItem("cyberlegal-auth") ||
+      Cookies.get("cyberlegal-auth");
     if (!isLoggedIn) {
-      router.push('/login');
+      router.push("/login");
     } else {
       setAuthChecked(true);
     }
@@ -58,44 +59,50 @@ export default function ChatbotPage() {
   //   }, 1200);
   // };
 
-	const handleSend = async (e: React.FormEvent) => {
-		e.preventDefault();
-		if (!input.trim()) return;
-	
-		const userMessage: Message = { sender: 'user', content: input.trim() };
-		setMessages(prev => [...prev, userMessage]);
-		setInput('');
-		setIsTyping(true);
-	
-		try {
-			const res = await fetch('http://localhost:8000/query', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ query: userMessage.content }),
-			});
-	
-			const data = await res.json();
-			const botReply: Message = { sender: 'bot', content: data.response };
-	
-			setMessages(prev => [...prev, botReply]);
-		} catch (err) {
-			console.error('Backend error:', err);
-			setMessages(prev => [
-				...prev,
-				{ sender: 'bot', content: '⚠️ Sorry, something went wrong while processing your question.' }
-			]);
-		} finally {
-			setIsTyping(false);
-		}
-	};
-	
+  const handleSend = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+
+    const userMessage: Message = { sender: "user", content: input.trim() };
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
+    setIsTyping(true);
+
+    try {
+      const res = await fetch(
+        "https://cyberlegal-ai-api.onrender.com/api/rag/query",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query: userMessage.content }),
+        }
+      );
+
+      const data = await res.json();
+      const botReply: Message = { sender: "bot", content: data.response };
+
+      setMessages((prev) => [...prev, botReply]);
+    } catch (err) {
+      console.error("Backend error:", err);
+      setMessages((prev) => [
+        ...prev,
+        {
+          sender: "bot",
+          content:
+            "⚠️ Sorry, something went wrong while processing your question.",
+        },
+      ]);
+    } finally {
+      setIsTyping(false);
+    }
+  };
 
   const sendPreset = (text: string) => {
     setInput(text);
   };
 
   const goHome = () => {
-    router.push('/');
+    router.push("/");
   };
 
   return (
@@ -103,7 +110,7 @@ export default function ChatbotPage() {
       {/* Sidebar */}
       <aside
         className={`fixed md:static z-30 top-0 left-0 h-full w-64 bg-zinc-950 border-r border-zinc-800 p-4 transform transition-transform duration-200 ease-in-out ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+          sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         }`}
       >
         <h2 className="text-lg font-semibold mb-4">Cyberlegal.AI</h2>
@@ -114,8 +121,12 @@ export default function ChatbotPage() {
           >
             Home
           </button>
-          <button className="text-left text-zinc-300 hover:text-white">Cyber Legal Chat</button>
-          <button className="text-left text-zinc-300 hover:text-white">My Saved Questions</button>
+          <button className="text-left text-zinc-300 hover:text-white">
+            Cyber Legal Chat
+          </button>
+          <button className="text-left text-zinc-300 hover:text-white">
+            My Saved Questions
+          </button>
         </nav>
         <div className="mt-auto pt-4 border-t border-zinc-800 text-xs text-zinc-600">
           © 2025 Cyberlegal.AI
@@ -153,15 +164,38 @@ export default function ChatbotPage() {
           <div className="max-w-3xl mx-auto space-y-4">
             {messages.length === 0 && !isTyping && (
               <div className="flex flex-col items-center justify-center h-[70vh] text-center transition-opacity duration-500">
-                <h2 className="text-2xl font-semibold mb-3">What can I help with?</h2>
+                <h2 className="text-2xl font-semibold mb-3">
+                  What can I help with?
+                </h2>
                 <p className="text-sm text-zinc-400 mb-6 max-w-md">
-                  Ask any question about Philippine cyber law: cyber libel, data privacy, electronic evidence, and more.
+                  Ask any question about Philippine cyber law: cyber libel, data
+                  privacy, electronic evidence, and more.
                 </p>
                 <div className="flex flex-wrap gap-2 justify-center">
-                  <button onClick={() => sendPreset('What is cyber libel?')} className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-sm hover:bg-zinc-700">Explain</button>
-                  <button onClick={() => sendPreset('Summarize G.R. No. 123456')} className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-sm hover:bg-zinc-700">Digest</button>
-                  <button onClick={() => sendPreset('What laws protect online data?')} className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-sm hover:bg-zinc-700">Find</button>
-                  <button onClick={() => sendPreset('Draft a cyber complaint')} className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-sm hover:bg-zinc-700">Draft</button>
+                  <button
+                    onClick={() => sendPreset("What is cyber libel?")}
+                    className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-sm hover:bg-zinc-700"
+                  >
+                    Explain
+                  </button>
+                  <button
+                    onClick={() => sendPreset("Summarize G.R. No. 123456")}
+                    className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-sm hover:bg-zinc-700"
+                  >
+                    Digest
+                  </button>
+                  <button
+                    onClick={() => sendPreset("What laws protect online data?")}
+                    className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-sm hover:bg-zinc-700"
+                  >
+                    Find
+                  </button>
+                  <button
+                    onClick={() => sendPreset("Draft a cyber complaint")}
+                    className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-sm hover:bg-zinc-700"
+                  >
+                    Draft
+                  </button>
                 </div>
               </div>
             )}
@@ -170,9 +204,9 @@ export default function ChatbotPage() {
               <div
                 key={i}
                 className={`max-w-2xl px-6 py-4 rounded-lg text-sm whitespace-pre-wrap ${
-                  msg.sender === 'user'
-                    ? 'bg-indigo-600 text-white self-end ml-auto'
-                    : 'bg-zinc-800 text-zinc-100'
+                  msg.sender === "user"
+                    ? "bg-indigo-600 text-white self-end ml-auto"
+                    : "bg-zinc-800 text-zinc-100"
                 }`}
               >
                 {msg.content}
@@ -180,13 +214,18 @@ export default function ChatbotPage() {
             ))}
 
             {isTyping && (
-              <div className="text-sm text-zinc-500 animate-pulse">Cyberlegal.AI is typing...</div>
+              <div className="text-sm text-zinc-500 animate-pulse">
+                Cyberlegal.AI is typing...
+              </div>
             )}
           </div>
         </div>
 
         {/* Input */}
-        <form onSubmit={handleSend} className="p-4 border-t border-zinc-800 bg-zinc-900">
+        <form
+          onSubmit={handleSend}
+          className="p-4 border-t border-zinc-800 bg-zinc-900"
+        >
           <div className="max-w-3xl mx-auto flex items-center gap-2">
             <input
               value={input}
