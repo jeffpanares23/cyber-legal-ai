@@ -1,126 +1,112 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
-// import ChatSidebar from '@/app/components/chat/ChatSidebar';
-// import ChatEmptyState from '@/app/components/chat/ChatEmptyState';
-// import ChatInput from '@/app/components/chat/ChatInput';
-// import ChatBubble from '@/app/components/chat/ChatBubble';
-// import ChatHeader from '@/app/components/chat/ChatHeader';
-import ChatSidebar from '../components/ChatSidebar';
-import ChatEmptyState from '../components/ChatEmptyState';
-import ChatInput from '../components/ChatInput';
-import ChatHeader from '../components/ChatHeader';
-import ChatBubble from '../components/ChatBubble';
+import ChatSidebar from "../components/ChatSidebar";
+import ChatEmptyState from "../components/ChatEmptyState";
+import ChatInput from "../components/ChatInput";
+import ChatHeader from "../components/ChatHeader";
+import ChatMessageList from "../components/ChatMessageList";
 
-export interface Message {
-  sender: 'user' | 'bot';
-  content: string;
-}
+import { ChatMessage, ChatSession } from "@/types/ChatTypes";
+import { saveChatSession } from "@/utils/chatStorage";
 
 export default function ChatbotPage() {
   const router = useRouter();
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState('');
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
   const chatRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const isLoggedIn =
-      sessionStorage.getItem('cyberlegal-auth') || Cookies.get('cyberlegal-auth');
-    if (!isLoggedIn) {
-      router.push('/login');
-    } else {
-      setAuthChecked(true);
-    }
+    const isLoggedIn = sessionStorage.getItem("cyberlegal-auth") || Cookies.get("cyberlegal-auth");
+    if (!isLoggedIn) router.push("/login");
+    else setAuthChecked(true);
   }, [router]);
 
   useEffect(() => {
-    if (chatRef.current) {
-      chatRef.current.scrollTop = chatRef.current.scrollHeight;
-    }
+    if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight;
   }, [messages]);
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
 
-    const userMessage: Message = { sender: 'user', content: input.trim() };
-    setMessages((prev) => [...prev, userMessage]);
-    setInput('');
+    const userMessage: ChatMessage = { sender: "user", content: input.trim() };
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
+    setInput("");
     setIsTyping(true);
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/rag/query', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("http://127.0.0.1:8000/api/rag/query", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query: userMessage.content }),
       });
 
       const data = await res.json();
-      const botReply: Message = { sender: 'bot', content: data.response };
-      setMessages((prev) => [...prev, botReply]);
+      const botReply: ChatMessage = { sender: "bot", content: data.response };
+      const fullChat = [...updatedMessages, botReply];
+
+      setMessages(fullChat);
+
+      saveChatSession({
+        id: crypto.randomUUID(),
+        title: userMessage.content,
+        messages: fullChat,
+        createdAt: new Date().toISOString(),
+      });
     } catch (err) {
-      console.error('Backend error:', err);
-      setMessages((prev) => [
-        ...prev,
-        {
-          sender: 'bot',
-          content: '⚠️ Sorry, something went wrong while processing your question.',
-        },
-      ]);
+      console.error("Backend error:", err);
     } finally {
       setIsTyping(false);
     }
   };
 
-  const sendPreset = (text: string) => {
-    setInput(text);
+  const sendPreset = (text: string) => setInput(text);
+
+  const handleSelectSession = (session: ChatSession) => {
+    setMessages(session.messages);
   };
 
   if (!authChecked) return null;
 
   return (
     <div className="flex h-screen overflow-hidden bg-zinc-900 text-white">
-      <ChatSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-40 z-20 md:hidden"
-          onClick={() => setSidebarOpen(false)}
-        ></div>
-      )}
-
+      <ChatSidebar
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+        onSelectSession={handleSelectSession}
+      />
       <main className="flex flex-col flex-1">
         <ChatHeader setSidebarOpen={setSidebarOpen} />
-
         <div ref={chatRef} className="flex-1 overflow-y-auto px-6 py-4">
           <div className="max-w-3xl mx-auto space-y-4">
             {messages.length === 0 && !isTyping ? (
-              <ChatEmptyState onPresetClick={sendPreset} />
+              <ChatEmptyState
+                onPresetClick={sendPreset}
+                input={input}
+                onInputChange={(e) => setInput(e.target.value)}
+                onSend={handleSend}
+              />
             ) : (
-              messages.map((msg, i) => (
-                <ChatBubble key={i} sender={msg.sender} content={msg.content} />
-              ))
-            )}
-
-            {isTyping && (
-              <div className="text-sm text-zinc-500 animate-pulse">
-                Cyberlegal.AI is typing...
-              </div>
+              <ChatMessageList messages={messages} isTyping={isTyping} />
             )}
           </div>
         </div>
-
-        <ChatInput
-          input={input}
-          onInputChange={(e) => setInput(e.target.value)}
-          onSend={handleSend}
-        />
+        {messages.length > 0 && (
+          <ChatInput
+            input={input}
+            onInputChange={(e) => setInput(e.target.value)}
+            onSend={handleSend}
+          />
+        )}
       </main>
     </div>
   );
