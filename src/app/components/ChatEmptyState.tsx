@@ -1,7 +1,9 @@
 "use client";
 
+import { useRef, useEffect } from "react";
 import { FC, useState } from "react";
 import { PaperAirplaneIcon } from "@heroicons/react/24/solid";  
+
 interface ChatEmptyStateProps {
   onPresetClick: (text: string) => void;
   input: string;
@@ -37,6 +39,11 @@ const ChatEmptyState: FC<ChatEmptyStateProps> = ({
     useState<keyof typeof rolePrompts>("Prosecutor");
   const [selectedTone, setSelectedTone] = useState("Professional");
   const [activePrompt, setActivePrompt] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center h-[70vh] text-center transition-opacity duration-500 px-4">
@@ -79,6 +86,7 @@ const ChatEmptyState: FC<ChatEmptyStateProps> = ({
       className="relative flex items-center w-full"
     >
       <input
+        ref={inputRef}
         value={input}
         onChange={onInputChange}
         type="text"

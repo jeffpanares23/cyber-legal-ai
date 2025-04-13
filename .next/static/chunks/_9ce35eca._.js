@@ -115,73 +115,272 @@ if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelper
 
 var { g: global, __dirname, k: __turbopack_refresh__, m: module } = __turbopack_context__;
 {
-// components/ChatEmptyState.tsx
 __turbopack_context__.s({
-    "default": (()=>ChatEmptyState)
+    "default": (()=>__TURBOPACK__default__export__)
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+(()=>{
+    const e = new Error("Cannot find module '@heroicons/react/24/solid'");
+    e.code = 'MODULE_NOT_FOUND';
+    throw e;
+})();
 ;
-function ChatEmptyState({ onPresetClick }) {
+var _s = __turbopack_context__.k.signature();
+"use client";
+;
+;
+const rolePrompts = {
+    Prosecutor: [
+        "Can you summarize recent Philippine jurisprudence that strengthens the prosecution’s case in online child exploitation?",
+        "What’s the difference between charges under RA 9775 and RA 9208 in an exploitation case involving livestreaming?",
+        "What penalties are imposed under RA 10175 when RA 9775 is violated using ICT?"
+    ],
+    Defendant: [
+        "What are the constitutional rights of the accused in cybercrime cases?",
+        "How can I defend myself against a cyber libel accusation?",
+        "Can I file a counter-affidavit if accused under the Data Privacy Act?"
+    ],
+    Judge: [
+        "What’s the current precedent on warrantless arrests in online entrapment operations?",
+        "How is electronic evidence evaluated in Philippine courts?",
+        "What cases clarify judicial discretion in cybercrime bail rulings?"
+    ]
+};
+const ChatEmptyState = ({ onPresetClick, input, onInputChange, onSend })=>{
+    _s();
+    const [selectedRole, setSelectedRole] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("Prosecutor");
+    const [selectedTone, setSelectedTone] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("Professional");
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "flex flex-col items-center justify-center h-[70vh] text-center transition-opacity duration-500",
+        className: "flex flex-col items-center justify-center h-[70vh] text-center transition-opacity duration-500 px-4",
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-                className: "text-2xl font-semibold mb-3",
-                children: "What can I help with?"
+                className: "text-xl font-semibold p-6",
+                children: "What legal question do you have in mind?"
             }, void 0, false, {
                 fileName: "[project]/src/app/components/ChatEmptyState.tsx",
-                lineNumber: 10,
-                columnNumber: 9
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                className: "text-sm text-zinc-400 mb-6 max-w-md",
-                children: "Ask any question about Philippine cyber law: cyber libel, data privacy, electronic evidence, and more."
-            }, void 0, false, {
-                fileName: "[project]/src/app/components/ChatEmptyState.tsx",
-                lineNumber: 11,
+                lineNumber: 42,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "flex flex-wrap gap-2 justify-center",
+                className: "bg-zinc-900 border border-zinc-700 rounded-lg shadow-md w-full max-w-2xl px-6 py-6 space-y-6",
                 children: [
-                    {
-                        label: "Explain",
-                        prompt: "What is cyber libel?"
-                    },
-                    {
-                        label: "Digest",
-                        prompt: "Summarize G.R. No. 123456"
-                    },
-                    {
-                        label: "Find",
-                        prompt: "What laws protect online data?"
-                    },
-                    {
-                        label: "Draft",
-                        prompt: "Draft a cyber complaint"
-                    }
-                ].map(({ label, prompt })=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                        onClick: ()=>onPresetClick(prompt),
-                        className: "px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-sm hover:bg-zinc-700",
-                        children: label
-                    }, label, false, {
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "flex justify-center gap-4 text-sm text-zinc-300",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "flex items-center gap-1",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: "text-zinc-400",
+                                        children: "AI Role:"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/components/ChatEmptyState.tsx",
+                                        lineNumber: 48,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
+                                        value: selectedRole,
+                                        onChange: (e)=>setSelectedRole(e.target.value),
+                                        className: "bg-zinc-800 border border-zinc-700 px-2 py-1 rounded-md text-white",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                children: "Prosecutor"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/components/ChatEmptyState.tsx",
+                                                lineNumber: 56,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                children: "Defendant"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/components/ChatEmptyState.tsx",
+                                                lineNumber: 57,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                children: "Judge"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/components/ChatEmptyState.tsx",
+                                                lineNumber: 58,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/app/components/ChatEmptyState.tsx",
+                                        lineNumber: 49,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/app/components/ChatEmptyState.tsx",
+                                lineNumber: 47,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "flex items-center gap-1",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: "text-zinc-400",
+                                        children: "AI Tone:"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/components/ChatEmptyState.tsx",
+                                        lineNumber: 62,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
+                                        value: selectedTone,
+                                        onChange: (e)=>setSelectedTone(e.target.value),
+                                        className: "bg-zinc-800 border border-zinc-700 px-2 py-1 rounded-md text-white",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                children: "Professional"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/components/ChatEmptyState.tsx",
+                                                lineNumber: 68,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                children: "Casual"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/components/ChatEmptyState.tsx",
+                                                lineNumber: 69,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                children: "Neutral"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/components/ChatEmptyState.tsx",
+                                                lineNumber: 70,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/app/components/ChatEmptyState.tsx",
+                                        lineNumber: 63,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/app/components/ChatEmptyState.tsx",
+                                lineNumber: 61,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
                         fileName: "[project]/src/app/components/ChatEmptyState.tsx",
-                        lineNumber: 21,
-                        columnNumber: 13
-                    }, this))
-            }, void 0, false, {
+                        lineNumber: 46,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
+                        onSubmit: onSend,
+                        className: "relative flex items-center w-full",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                value: input,
+                                onChange: onInputChange,
+                                type: "text",
+                                placeholder: "Tell me about the case...",
+                                className: "w-full pr-12 pl-4 py-2 rounded-md bg-zinc-800 border border-zinc-700 text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/components/ChatEmptyState.tsx",
+                                lineNumber: 80,
+                                columnNumber: 7
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                type: "submit",
+                                className: "absolute right-2 top-1/2 -translate-y-1/2 text-indigo-400 hover:text-indigo-600 transition",
+                                "aria-label": "Send",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(PaperAirplaneIcon, {
+                                    className: "w-5 h-5 rotate-45"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/app/components/ChatEmptyState.tsx",
+                                    lineNumber: 92,
+                                    columnNumber: 9
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/components/ChatEmptyState.tsx",
+                                lineNumber: 87,
+                                columnNumber: 7
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/app/components/ChatEmptyState.tsx",
+                        lineNumber: 76,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
                 fileName: "[project]/src/app/components/ChatEmptyState.tsx",
-                lineNumber: 14,
-                columnNumber: 9
+                lineNumber: 43,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "mt-8 text-sm text-zinc-400",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                        className: "mb-2",
+                        children: "Here are some prompts to help you begin:"
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/components/ChatEmptyState.tsx",
+                        lineNumber: 99,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "flex justify-center gap-2 mb-4",
+                        children: [
+                            "Prosecutor",
+                            "Defendant",
+                            "Judge"
+                        ].map((role)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                onClick: ()=>setSelectedRole(role),
+                                className: `px-4 py-2 rounded-full border text-sm ${selectedRole === role ? "bg-indigo-600 text-white border-indigo-600" : "border-zinc-700 text-zinc-300 hover:bg-zinc-800"}`,
+                                children: [
+                                    "As a ",
+                                    role
+                                ]
+                            }, role, true, {
+                                fileName: "[project]/src/app/components/ChatEmptyState.tsx",
+                                lineNumber: 102,
+                                columnNumber: 13
+                            }, this))
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/components/ChatEmptyState.tsx",
+                        lineNumber: 100,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "flex flex-col items-center gap-2 max-w-xl mx-auto",
+                        children: rolePrompts[selectedRole].map((prompt, idx)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                onClick: ()=>onPresetClick(prompt),
+                                className: "w-full text-left px-4 py-2 border border-zinc-700 rounded-md bg-zinc-800 text-zinc-200 hover:bg-zinc-700 transition",
+                                children: prompt
+                            }, idx, false, {
+                                fileName: "[project]/src/app/components/ChatEmptyState.tsx",
+                                lineNumber: 119,
+                                columnNumber: 13
+                            }, this))
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/components/ChatEmptyState.tsx",
+                        lineNumber: 117,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/app/components/ChatEmptyState.tsx",
+                lineNumber: 98,
+                columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/components/ChatEmptyState.tsx",
-        lineNumber: 9,
-        columnNumber: 7
+        lineNumber: 41,
+        columnNumber: 5
     }, this);
-}
+};
+_s(ChatEmptyState, "qpSslypfjuU7Zrue9RPNmgzVhKI=");
 _c = ChatEmptyState;
+const __TURBOPACK__default__export__ = ChatEmptyState;
 var _c;
 __turbopack_context__.k.register(_c, "ChatEmptyState");
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
@@ -202,39 +401,39 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 const ChatInput = ({ input, onInputChange, onSend })=>{
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
         onSubmit: onSend,
-        className: "p-4 border-t border-zinc-800 bg-zinc-900",
+        className: "w-full border-t border-zinc-800 bg-zinc-900 p-4",
         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
             className: "max-w-3xl mx-auto flex items-center gap-2",
             children: [
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                    type: "text",
                     value: input,
                     onChange: onInputChange,
-                    type: "text",
                     placeholder: "Ask about cyber libel, privacy law...",
-                    className: "flex-1 px-4 py-2 rounded-md bg-zinc-800 border border-zinc-700 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className: "flex-1 px-4 py-2 rounded-md bg-zinc-800 border border-zinc-700 text-white placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
                 }, void 0, false, {
                     fileName: "[project]/src/app/components/ChatInput.tsx",
-                    lineNumber: 23,
+                    lineNumber: 18,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                     type: "submit",
-                    className: "px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700",
+                    className: "px-5 py-2 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-sm transition-all",
                     children: "Send"
                 }, void 0, false, {
                     fileName: "[project]/src/app/components/ChatInput.tsx",
-                    lineNumber: 30,
+                    lineNumber: 25,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/src/app/components/ChatInput.tsx",
-            lineNumber: 22,
+            lineNumber: 17,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/app/components/ChatInput.tsx",
-        lineNumber: 18,
+        lineNumber: 13,
         columnNumber: 5
     }, this);
 };
@@ -378,6 +577,7 @@ if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelper
 
 var { g: global, __dirname, k: __turbopack_refresh__, m: module } = __turbopack_context__;
 {
+// File: src/app/chatbot/page.tsx
 __turbopack_context__.s({
     "default": (()=>ChatbotPage)
 });
@@ -385,19 +585,16 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/navigation.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$js$2d$cookie$2f$dist$2f$js$2e$cookie$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/js-cookie/dist/js.cookie.mjs [app-client] (ecmascript)");
-// import ChatSidebar from '@/app/components/chat/ChatSidebar';
-// import ChatEmptyState from '@/app/components/chat/ChatEmptyState';
-// import ChatInput from '@/app/components/chat/ChatInput';
-// import ChatBubble from '@/app/components/chat/ChatBubble';
-// import ChatHeader from '@/app/components/chat/ChatHeader';
+// Components
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ChatSidebar$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/app/components/ChatSidebar.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ChatEmptyState$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/app/components/ChatEmptyState.tsx [app-client] (ecmascript)");
+// import ChatSuggestedPrompts from '../components/ChatSuggestedPrompts';
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ChatInput$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/app/components/ChatInput.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ChatHeader$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/app/components/ChatHeader.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ChatBubble$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/app/components/ChatBubble.tsx [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
-'use client';
+"use client";
 ;
 ;
 ;
@@ -410,16 +607,16 @@ function ChatbotPage() {
     _s();
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
     const [messages, setMessages] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
-    const [input, setInput] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
+    const [input, setInput] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
     const [isTyping, setIsTyping] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [authChecked, setAuthChecked] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [sidebarOpen, setSidebarOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const chatRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "ChatbotPage.useEffect": ()=>{
-            const isLoggedIn = sessionStorage.getItem('cyberlegal-auth') || __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$js$2d$cookie$2f$dist$2f$js$2e$cookie$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].get('cyberlegal-auth');
+            const isLoggedIn = sessionStorage.getItem("cyberlegal-auth") || __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$js$2d$cookie$2f$dist$2f$js$2e$cookie$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].get("cyberlegal-auth");
             if (!isLoggedIn) {
-                router.push('/login');
+                router.push("/login");
             } else {
                 setAuthChecked(true);
             }
@@ -440,20 +637,20 @@ function ChatbotPage() {
         e.preventDefault();
         if (!input.trim()) return;
         const userMessage = {
-            sender: 'user',
+            sender: "user",
             content: input.trim()
         };
         setMessages((prev)=>[
                 ...prev,
                 userMessage
             ]);
-        setInput('');
+        setInput("");
         setIsTyping(true);
         try {
-            const res = await fetch('http://127.0.0.1:8000/api/rag/query', {
-                method: 'POST',
+            const res = await fetch("http://127.0.0.1:8000/api/rag/query", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json'
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
                     query: userMessage.content
@@ -461,7 +658,7 @@ function ChatbotPage() {
             });
             const data = await res.json();
             const botReply = {
-                sender: 'bot',
+                sender: "bot",
                 content: data.response
             };
             setMessages((prev)=>[
@@ -469,12 +666,12 @@ function ChatbotPage() {
                     botReply
                 ]);
         } catch (err) {
-            console.error('Backend error:', err);
+            console.error("Backend error:", err);
             setMessages((prev)=>[
                     ...prev,
                     {
-                        sender: 'bot',
-                        content: '⚠️ Sorry, something went wrong while processing your question.'
+                        sender: "bot",
+                        content: "⚠️ Sorry, something went wrong while processing your question."
                     }
                 ]);
         } finally{
@@ -490,19 +687,12 @@ function ChatbotPage() {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ChatSidebar$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                 sidebarOpen: sidebarOpen,
-                setSidebarOpen: setSidebarOpen
+                setSidebarOpen: setSidebarOpen,
+                onClose: ()=>setSidebarOpen(false)
             }, void 0, false, {
                 fileName: "[project]/src/app/chatbot/page.tsx",
-                lineNumber: 89,
+                lineNumber: 97,
                 columnNumber: 7
-            }, this),
-            sidebarOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "fixed inset-0 bg-black bg-opacity-40 z-20 md:hidden",
-                onClick: ()=>setSidebarOpen(false)
-            }, void 0, false, {
-                fileName: "[project]/src/app/chatbot/page.tsx",
-                lineNumber: 92,
-                columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
                 className: "flex flex-col flex-1",
@@ -511,7 +701,7 @@ function ChatbotPage() {
                         setSidebarOpen: setSidebarOpen
                     }, void 0, false, {
                         fileName: "[project]/src/app/chatbot/page.tsx",
-                        lineNumber: 99,
+                        lineNumber: 105,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -519,63 +709,68 @@ function ChatbotPage() {
                         className: "flex-1 overflow-y-auto px-6 py-4",
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "max-w-3xl mx-auto space-y-4",
-                            children: [
-                                messages.length === 0 && !isTyping ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ChatEmptyState$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                    onPresetClick: sendPreset
-                                }, void 0, false, {
-                                    fileName: "[project]/src/app/chatbot/page.tsx",
-                                    lineNumber: 104,
-                                    columnNumber: 15
-                                }, this) : messages.map((msg, i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ChatBubble$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                        sender: msg.sender,
-                                        content: msg.content
-                                    }, i, false, {
+                            children: messages.length === 0 && !isTyping ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ChatEmptyState$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                onPresetClick: sendPreset,
+                                input: input,
+                                onInputChange: (e)=>setInput(e.target.value),
+                                onSend: handleSend
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/chatbot/page.tsx",
+                                lineNumber: 111,
+                                columnNumber: 15
+                            }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                                children: [
+                                    messages.map((msg, i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ChatBubble$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                            sender: msg.sender,
+                                            content: msg.content
+                                        }, i, false, {
+                                            fileName: "[project]/src/app/chatbot/page.tsx",
+                                            lineNumber: 120,
+                                            columnNumber: 19
+                                        }, this)),
+                                    isTyping && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "text-sm text-zinc-500 animate-pulse",
+                                        children: "Cyberlegal.AI is typing..."
+                                    }, void 0, false, {
                                         fileName: "[project]/src/app/chatbot/page.tsx",
-                                        lineNumber: 107,
-                                        columnNumber: 17
-                                    }, this)),
-                                isTyping && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "text-sm text-zinc-500 animate-pulse",
-                                    children: "Cyberlegal.AI is typing..."
-                                }, void 0, false, {
-                                    fileName: "[project]/src/app/chatbot/page.tsx",
-                                    lineNumber: 112,
-                                    columnNumber: 15
-                                }, this)
-                            ]
-                        }, void 0, true, {
+                                        lineNumber: 128,
+                                        columnNumber: 19
+                                    }, this)
+                                ]
+                            }, void 0, true)
+                        }, void 0, false, {
                             fileName: "[project]/src/app/chatbot/page.tsx",
-                            lineNumber: 102,
+                            lineNumber: 109,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/chatbot/page.tsx",
-                        lineNumber: 101,
+                        lineNumber: 108,
                         columnNumber: 9
                     }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ChatInput$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                    messages.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ChatInput$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                         input: input,
                         onInputChange: (e)=>setInput(e.target.value),
                         onSend: handleSend
                     }, void 0, false, {
                         fileName: "[project]/src/app/chatbot/page.tsx",
-                        lineNumber: 119,
-                        columnNumber: 9
+                        lineNumber: 139,
+                        columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/chatbot/page.tsx",
-                lineNumber: 98,
+                lineNumber: 104,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/chatbot/page.tsx",
-        lineNumber: 88,
+        lineNumber: 95,
         columnNumber: 5
     }, this);
 }
-_s(ChatbotPage, "OQnv39GOyw/2Y7myxNwgoKFBcQ8=", false, function() {
+_s(ChatbotPage, "eWKR46h5LRUhetHPELbyBStlytg=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"]
     ];
