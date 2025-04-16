@@ -123,9 +123,34 @@ function ChatbotPage() {
             ]);
         setInput("");
         setIsTyping(true);
+<<<<<<< Updated upstream
         try {
             const res = await fetch(// "https://cyberlegal-ai-api.onrender.com/api/rag/query",
             "http://127.0.0.1:8000/api/rag/query", {
+=======
+        const normalized = input.trim().toLowerCase();
+        // Check if greeting, respond locally
+        if ([
+            "hi",
+            "hello",
+            "hey"
+        ].includes(normalized)) {
+            const greetingResponse = {
+                sender: "bot",
+                content: "👋 Hi! I'm your Legal Assistant AI.\nI'm here to help you understand your rights and options when it comes to cybercrime issues."
+            };
+            setTimeout(()=>{
+                setMessages((prev)=>[
+                        ...prev,
+                        greetingResponse
+                    ]);
+                setIsTyping(false);
+            }, 800);
+            return;
+        }
+        try {
+            const res = await fetch("http://127.0.0.1:8000/api/rag/query", {
+>>>>>>> Stashed changes
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -135,10 +160,15 @@ function ChatbotPage() {
                 })
             });
             const data = await res.json();
+<<<<<<< Updated upstream
+=======
+            // Bot main answer
+>>>>>>> Stashed changes
             const botReply = {
                 sender: "bot",
                 content: data.response
             };
+<<<<<<< Updated upstream
             setMessages((prev)=>[
                     ...prev,
                     botReply
@@ -151,6 +181,21 @@ function ChatbotPage() {
                         sender: "bot",
                         content: "⚠️ Sorry, something went wrong while processing your question."
                     }
+=======
+            // Optional: Bot sources
+            const sources = data.sources || [];
+            const sourceText = sources.length > 0 ? `📚 **Sources:**\n- ${sources.join("\n- ")}` : "";
+            const sourceReply = sourceText.length > 0 ? {
+                sender: "bot",
+                content: sourceText
+            } : null;
+            setMessages((prev)=>[
+                    ...prev,
+                    botReply,
+                    ...sourceReply ? [
+                        sourceReply
+                    ] : []
+>>>>>>> Stashed changes
                 ]);
         } finally{
             setIsTyping(false);
@@ -173,7 +218,11 @@ function ChatbotPage() {
                         children: "Cyberlegal.AI"
                     }, void 0, false, {
                         fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                         lineNumber: 117,
+=======
+                        lineNumber: 133,
+>>>>>>> Stashed changes
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
@@ -185,7 +234,11 @@ function ChatbotPage() {
                                 children: "Home"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                                 lineNumber: 119,
+=======
+                                lineNumber: 135,
+>>>>>>> Stashed changes
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -193,7 +246,11 @@ function ChatbotPage() {
                                 children: "Cyber Legal Chat"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                                 lineNumber: 125,
+=======
+                                lineNumber: 141,
+>>>>>>> Stashed changes
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -201,13 +258,21 @@ function ChatbotPage() {
                                 children: "My Saved Questions"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                                 lineNumber: 128,
+=======
+                                lineNumber: 144,
+>>>>>>> Stashed changes
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                         lineNumber: 118,
+=======
+                        lineNumber: 134,
+>>>>>>> Stashed changes
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -215,13 +280,21 @@ function ChatbotPage() {
                         children: "© 2025 Cyberlegal.AI"
                     }, void 0, false, {
                         fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                         lineNumber: 132,
+=======
+                        lineNumber: 148,
+>>>>>>> Stashed changes
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                 lineNumber: 112,
+=======
+                lineNumber: 128,
+>>>>>>> Stashed changes
                 columnNumber: 7
             }, this),
             sidebarOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -229,7 +302,11 @@ function ChatbotPage() {
                 onClick: ()=>setSidebarOpen(false)
             }, void 0, false, {
                 fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                 lineNumber: 139,
+=======
+                lineNumber: 155,
+>>>>>>> Stashed changes
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -246,12 +323,20 @@ function ChatbotPage() {
                                         onClick: ()=>setSidebarOpen(true),
                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$menu$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Menu$3e$__["Menu"], {}, void 0, false, {
                                             fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                                             lineNumber: 151,
+=======
+                                            lineNumber: 167,
+>>>>>>> Stashed changes
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                                         lineNumber: 150,
+=======
+                                        lineNumber: 166,
+>>>>>>> Stashed changes
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
@@ -259,13 +344,21 @@ function ChatbotPage() {
                                         children: "Cyberlegal.AI Chat Assistant"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                                         lineNumber: 153,
+=======
+                                        lineNumber: 169,
+>>>>>>> Stashed changes
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                                 lineNumber: 149,
+=======
+                                lineNumber: 165,
+>>>>>>> Stashed changes
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -274,13 +367,21 @@ function ChatbotPage() {
                                 children: "Logout"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                                 lineNumber: 155,
+=======
+                                lineNumber: 171,
+>>>>>>> Stashed changes
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                         lineNumber: 148,
+=======
+                        lineNumber: 164,
+>>>>>>> Stashed changes
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -297,7 +398,11 @@ function ChatbotPage() {
                                             children: "What can I help with?"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                                             lineNumber: 168,
+=======
+                                            lineNumber: 184,
+>>>>>>> Stashed changes
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -305,7 +410,11 @@ function ChatbotPage() {
                                             children: "Ask any question about Philippine cyber law: cyber libel, data privacy, electronic evidence, and more."
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                                             lineNumber: 171,
+=======
+                                            lineNumber: 187,
+>>>>>>> Stashed changes
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -317,7 +426,11 @@ function ChatbotPage() {
                                                     children: "Explain"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                                                     lineNumber: 176,
+=======
+                                                    lineNumber: 192,
+>>>>>>> Stashed changes
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -326,7 +439,11 @@ function ChatbotPage() {
                                                     children: "Digest"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                                                     lineNumber: 182,
+=======
+                                                    lineNumber: 198,
+>>>>>>> Stashed changes
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -335,7 +452,11 @@ function ChatbotPage() {
                                                     children: "Find"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                                                     lineNumber: 188,
+=======
+                                                    lineNumber: 204,
+>>>>>>> Stashed changes
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -344,19 +465,31 @@ function ChatbotPage() {
                                                     children: "Draft"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                                                     lineNumber: 194,
+=======
+                                                    lineNumber: 210,
+>>>>>>> Stashed changes
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                                             lineNumber: 175,
+=======
+                                            lineNumber: 191,
+>>>>>>> Stashed changes
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                                     lineNumber: 167,
+=======
+                                    lineNumber: 183,
+>>>>>>> Stashed changes
                                     columnNumber: 15
                                 }, this),
                                 messages.map((msg, i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -364,7 +497,11 @@ function ChatbotPage() {
                                         children: msg.content
                                     }, i, false, {
                                         fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                                         lineNumber: 205,
+=======
+                                        lineNumber: 221,
+>>>>>>> Stashed changes
                                         columnNumber: 15
                                     }, this)),
                                 isTyping && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -372,18 +509,30 @@ function ChatbotPage() {
                                     children: "Cyberlegal.AI is typing..."
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                                     lineNumber: 218,
+=======
+                                    lineNumber: 234,
+>>>>>>> Stashed changes
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                             lineNumber: 165,
+=======
+                            lineNumber: 181,
+>>>>>>> Stashed changes
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                         lineNumber: 164,
+=======
+                        lineNumber: 180,
+>>>>>>> Stashed changes
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -400,7 +549,11 @@ function ChatbotPage() {
                                     className: "flex-1 px-4 py-2 rounded-md bg-zinc-800 border border-zinc-700 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                                     lineNumber: 231,
+=======
+                                    lineNumber: 247,
+>>>>>>> Stashed changes
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -409,30 +562,50 @@ function ChatbotPage() {
                                     children: "Send"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                                     lineNumber: 238,
+=======
+                                    lineNumber: 254,
+>>>>>>> Stashed changes
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                             lineNumber: 230,
+=======
+                            lineNumber: 246,
+>>>>>>> Stashed changes
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                         lineNumber: 226,
+=======
+                        lineNumber: 242,
+>>>>>>> Stashed changes
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
                 lineNumber: 146,
+=======
+                lineNumber: 162,
+>>>>>>> Stashed changes
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/chatbot/page.tsx",
+<<<<<<< Updated upstream
         lineNumber: 110,
+=======
+        lineNumber: 126,
+>>>>>>> Stashed changes
         columnNumber: 5
     }, this);
 }

@@ -11,7 +11,16 @@
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@lottiefiles/react-lottie-player": "^3.6.0",
+<<<<<<< Updated upstream
     "framer-motion": "^12.6.5",
+=======
+<<<<<<< Updated upstream
+=======
+    "@react-oauth/google": "^0.12.1",
+    "date-fns": "^4.1.0",
+    "framer-motion": "^12.6.5",
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.487.0",
     "next": "15.2.4",
