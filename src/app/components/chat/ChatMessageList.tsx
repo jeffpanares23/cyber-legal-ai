@@ -1,15 +1,16 @@
-// Updated ChatMessageList.tsx
-import React, { ForwardedRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+// src/app/components/chat/ChatMessageList.tsx
+import React from "react";
 import { ChatMessage } from "@/types/ChatTypes";
 import UserBubble from "./UserBubble";
 import AiBubble from "./AiBubble";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface ChatMessageListProps {
   messages: ChatMessage[];
   isTyping: boolean;
   smartTitle?: string;
   chatRef?: React.RefObject<HTMLDivElement | null>;
+  setSelectedReference?: (src: string) => void; // ✅ Added
 }
 
 const ChatMessageList: React.FC<ChatMessageListProps> = ({
@@ -17,6 +18,7 @@ const ChatMessageList: React.FC<ChatMessageListProps> = ({
   isTyping,
   smartTitle,
   chatRef,
+  setSelectedReference, // ✅
 }) => {
   return (
     <div
@@ -39,7 +41,10 @@ const ChatMessageList: React.FC<ChatMessageListProps> = ({
             transition={{ delay: index * 0.05 }}
           >
             {msg.sender === "bot" ? (
-              <AiBubble content={msg.content} />
+              <AiBubble
+                content={msg.content}
+                onReferenceClick={setSelectedReference} // ✅ Pass it here
+              />
             ) : (
               <UserBubble content={msg.content} />
             )}
@@ -51,7 +56,6 @@ const ChatMessageList: React.FC<ChatMessageListProps> = ({
             key="typing"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: messages.length * 0.05 }}
             className="flex justify-start px-4"
           >
             <div className="bg-zinc-800 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 shadow-md">
