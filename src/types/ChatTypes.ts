@@ -1,4 +1,5 @@
 export interface ChatMessage {
+  role: string;
   sender: "user" | "bot";
   content: string;
 }

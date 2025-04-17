@@ -20,15 +20,9 @@
       "env": {
         "__NEXT_BUILD_ID": "development",
         "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "pHl6rc93KonpFmFpTY9rSU80m5niQuCoHl/A6uZdMYE=",
-<<<<<<< Updated upstream
         "__NEXT_PREVIEW_MODE_ID": "9594634ca60d58e9992d12aa6739e83c",
         "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "f7256b4a57bcb6cb2809988045bbd79cd51112c2888d805ab2c719beb61440ad",
         "__NEXT_PREVIEW_MODE_SIGNING_KEY": "20e345b657a4542e23030a857a162c3c116d48de90d26e2babd1214f396ef4de"
-=======
-        "__NEXT_PREVIEW_MODE_ID": "94609e281a56705b4614ffc6ce93a76d",
-        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "695cc122fc7b80e2f9a88d7fb52f08dd316a4fb2e6501e9d8ccc9ca167d25bc7",
-        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "c216c69dba30b7cdf6ce1640b67d319620178d7aed58fa92fdff93397a536618"
->>>>>>> Stashed changes
       }
     }
   },

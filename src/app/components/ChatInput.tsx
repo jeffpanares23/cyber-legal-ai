@@ -1,6 +1,6 @@
 "use client";
 
-import { FC } from "react";
+import { useEffect, useRef } from "react";
 
 interface ChatInputProps {
   input: string;
@@ -8,7 +8,19 @@ interface ChatInputProps {
   onSend: (e: React.FormEvent) => void;
 }
 
-const ChatInput: FC<ChatInputProps> = ({ input, onInputChange, onSend }) => {
+export default function ChatInput({
+  input,
+  onInputChange,
+  onSend,
+}: ChatInputProps) {
+
+  const inputRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
+
   return (
     <form
       onSubmit={onSend}
@@ -16,6 +28,7 @@ const ChatInput: FC<ChatInputProps> = ({ input, onInputChange, onSend }) => {
     >
       <div className="max-w-3xl mx-auto flex items-center gap-2">
         <input
+          ref={inputRef}
           type="text"
           value={input}
           onChange={onInputChange}
@@ -32,5 +45,3 @@ const ChatInput: FC<ChatInputProps> = ({ input, onInputChange, onSend }) => {
     </form>
   );
 };
-
-export default ChatInput;

@@ -1,110 +1,147 @@
-// File: src/app/components/SavedChatsSidebar.tsx
 "use client";
 
 import { useEffect, useState } from "react";
 import { ChatSession } from "@/types/ChatTypes";
-import { loadChatSessions,
-    saveChatSessions,
-    deleteChatSession,
-    renameChatSession, } from "@/utils/chatStorage";
+import {
+  loadChatSessions,
+  // saveChatSessions,
+  deleteChatSession,
+  renameChatSession,
+} from "@/utils/chatStorage";
 import { MoreHorizontal } from "lucide-react";
+import Toast from "./ui/Toast";
+
+interface SavedChatsSidebarProps {
+  onSelect: (session: ChatSession) => void;
+  sessions: ChatSession[];
+  setSessions: React.Dispatch<React.SetStateAction<ChatSession[]>>;
+  activeId: string | null;
+}
 
 export default function SavedChatsSidebar({
   onSelect,
-}: {
-  onSelect: (session: ChatSession) => void;
-}) {
-  const [sessions, setSessions] = useState<ChatSession[]>([]);
+  sessions,
+  setSessions,
+  activeId,
+}: SavedChatsSidebarProps) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState<string>("");
+  const [dropdownOpenId, setDropdownOpenId] = useState<string | null>(null);
+  const [toastMsg, setToastMsg] = useState("");
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
-    const stored = loadChatSessions();
-    setSessions(stored);
-  }, []);
+    setSessions(loadChatSessions());
+  }, [setSessions]);
+
+  const triggerToast = (msg: string) => {
+    setToastMsg(msg);
+    setShowToast(true);
+  };
 
   const handleRename = (id: string) => {
     const updated = sessions.map((s) =>
       s.id === id ? { ...s, title: editTitle } : s
     );
     setSessions(updated);
-    saveChatSessions(updated);
-    renameChatSession(id, editTitle); 
+    renameChatSession(id, editTitle);
     setEditingId(null);
+    triggerToast("Title updated");
   };
 
-//   const handleDelete = (id: string) => {
-//     const updated = sessions.filter((s) => s.id !== id);
-//     setSessions(updated);
-//     saveChatSessions(updated);
-//   };
-
-const handleDelete = (id: string) => {
+  const handleDelete = (id: string) => {
     const updated = sessions.filter((s) => s.id !== id);
     setSessions(updated);
-    deleteChatSession(id); // ✅ Save the update to localStorage
+    deleteChatSession(id);
+    triggerToast("Chat deleted");
   };
 
   return (
-    <div className="mt-6">
-      <h4 className="text-xs text-zinc-400 uppercase tracking-wide mb-2 pl-4">Chats</h4>
-      <ul className="text-sm space-y-1 px-2">
+    <div className="my-6">
+      <h4 className="text-xs text-zinc-400 uppercase tracking-wide mb-2">
+        Conversations
+      </h4>
+      <ul className="space-y-2">
         {sessions.map((session) => (
           <li
             key={session.id}
-            className="group flex justify-between items-center text-zinc-300 hover:text-white hover:bg-zinc-800 px-2 py-1 rounded cursor-pointer"
+            className={`relative p-3 rounded-md transition group cursor-pointer ${
+              activeId === session.id
+                ? "bg-zinc-700 text-white"
+                : "hover:bg-zinc-700 text-zinc-300"
+            }`}
+            onClick={() => onSelect(session)}
           >
             {editingId === session.id ? (
               <input
-                className="bg-zinc-900 text-white px-2 py-1 rounded w-full mr-2"
+                type="text"
+                className="w-full bg-transparent border-b border-white focus:outline-none"
                 value={editTitle}
                 onChange={(e) => setEditTitle(e.target.value)}
                 onBlur={() => handleRename(session.id)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handleRename(session.id);
+                  if (e.key === "Escape") {
+                    setEditingId(null);
+                    setDropdownOpenId(null); // ✅ Also hide dropdown just in case
+                  }
                 }}
                 autoFocus
               />
             ) : (
-              <span onClick={() => onSelect(session)} className="truncate flex-1">
-                {session.title}
-              </span>
+              <>
+                <div className="font-medium text-md truncate pr-6">{session.title}</div>
+                <div className="text-xs mt-1">
+                  {new Date(session.createdAt).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </div>
+              </>
             )}
-            <div className="relative ml-2 group-hover:visible invisible">
-              <button
-                className="p-1 rounded hover:bg-zinc-700"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  const menu = document.getElementById(`menu-${session.id}`);
-                  menu?.classList.toggle("hidden");
-                }}
-              >
-                <MoreHorizontal size={16} />
-              </button>
-              <div
-                id={`menu-${session.id}`}
-                className="hidden absolute right-0 mt-1 w-28 bg-zinc-800 text-sm text-white rounded shadow-md z-10"
-              >
-                <button
-                  onClick={() => {
-                    setEditingId(session.id);
-                    setEditTitle(session.title);
-                  }}
-                  className="block w-full px-3 py-2 text-left hover:bg-zinc-700"
-                >
-                  Rename
-                </button>
-                <button
-                  onClick={() => handleDelete(session.id)}
-                  className="block w-full px-3 py-2 text-left text-red-400 hover:bg-zinc-700"
-                >
-                  Delete
-                </button>
-              </div>
+            <div
+              className="absolute top-2 right-2"
+              onClick={(e) => {
+                e.stopPropagation();
+                setDropdownOpenId((prev) =>
+                  prev === session.id ? null : session.id
+                );
+              }}
+            >
+              <MoreHorizontal size={18} className="text-zinc-400 hover:text-white" />
+              {dropdownOpenId === session.id && (
+                <div className="absolute right-0 mt-1 w-32 bg-zinc-900 border border-zinc-700 rounded shadow-lg z-50">
+                  <button
+                    className="block w-full text-left px-3 py-2 text-sm hover:bg-zinc-800"
+                    onClick={() => {
+                      setEditTitle(session.title);
+                      setEditingId(session.id);
+                      setTimeout(() => setDropdownOpenId(null), 0);
+                    }}
+                  >
+                    Rename
+                  </button>
+                  <button
+                    className="block w-full text-left px-3 py-2 text-sm hover:bg-red-800 text-red-400"
+                    onClick={() => {
+                      handleDelete(session.id);
+                      setDropdownOpenId(null);
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
+              )}
             </div>
           </li>
         ))}
       </ul>
+      <Toast
+        message={toastMsg}
+        show={showToast}
+        onClose={() => setShowToast(false)}
+      />
     </div>
   );
 }
