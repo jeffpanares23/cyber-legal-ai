@@ -6,7 +6,7 @@
   "path": "static/chunks/src_app_chatbot_page_tsx_e70e0ec5._.js",
   "chunks": [
     "static/chunks/node_modules_28aadf7f._.js",
-    "static/chunks/src_8327bc79._.js"
+    "static/chunks/src_8dbd3e9f._.js"
   ],
   "source": "dynamic"
 });

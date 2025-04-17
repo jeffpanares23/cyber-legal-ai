@@ -1280,6 +1280,7 @@ function ChatbotPage() {
     const [activeSessionId, setActiveSessionId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const chatRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
     const [showNewChatModal, setShowNewChatModal] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const hasAiResponse = messages.some((msg)=>msg.sender === "bot");
     const handleNewChatConfirm = ()=>{
         setMessages([]);
         setShowNewChatModal(false);
@@ -1332,7 +1333,8 @@ function ChatbotPage() {
         if (!input.trim()) return;
         const userMessage = {
             sender: "user",
-            content: input.trim()
+            content: input.trim(),
+            role: ""
         };
         const updatedMessages = [
             ...messages,
@@ -1354,7 +1356,8 @@ function ChatbotPage() {
             const data = await res.json();
             const botReply = {
                 sender: "bot",
-                content: data.response
+                content: data.response,
+                role: ""
             };
             const fullChat = [
                 ...updatedMessages,
@@ -1387,7 +1390,7 @@ function ChatbotPage() {
                 onNewChatClick: ()=>setShowNewChatModal(true)
             }, void 0, false, {
                 fileName: "[project]/src/app/chatbot/page.tsx",
-                lineNumber: 131,
+                lineNumber: 140,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -1397,14 +1400,14 @@ function ChatbotPage() {
                         setSidebarOpen: setSidebarOpen
                     }, void 0, false, {
                         fileName: "[project]/src/app/chatbot/page.tsx",
-                        lineNumber: 141,
+                        lineNumber: 150,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         ref: chatRef,
                         className: "flex-1 overflow-y-auto px-6 py-4",
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "max-w-3xl mx-auto space-y-4",
+                            className: `mx-auto ${hasAiResponse ? "max-w-none" : "max-w-3xl"} ${hasAiResponse ? "flex flex-col gap-4" : "space-y-4"}`,
                             children: messages.length === 0 && !isTyping ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ChatEmptyState$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                 onPresetClick: sendPreset,
                                 input: input,
@@ -1412,24 +1415,24 @@ function ChatbotPage() {
                                 onSend: handleSend
                             }, void 0, false, {
                                 fileName: "[project]/src/app/chatbot/page.tsx",
-                                lineNumber: 145,
+                                lineNumber: 158,
                                 columnNumber: 15
                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ChatMessageList$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                 messages: messages,
                                 isTyping: isTyping
                             }, void 0, false, {
                                 fileName: "[project]/src/app/chatbot/page.tsx",
-                                lineNumber: 152,
+                                lineNumber: 165,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/chatbot/page.tsx",
-                            lineNumber: 143,
+                            lineNumber: 152,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/chatbot/page.tsx",
-                        lineNumber: 142,
+                        lineNumber: 151,
                         columnNumber: 9
                     }, this),
                     messages.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ChatInput$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -1438,13 +1441,13 @@ function ChatbotPage() {
                         onSend: handleSend
                     }, void 0, false, {
                         fileName: "[project]/src/app/chatbot/page.tsx",
-                        lineNumber: 157,
+                        lineNumber: 170,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/chatbot/page.tsx",
-                lineNumber: 140,
+                lineNumber: 149,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$NewChatConfirmModal$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -1453,13 +1456,13 @@ function ChatbotPage() {
                 onConfirm: handleNewChatConfirm
             }, void 0, false, {
                 fileName: "[project]/src/app/chatbot/page.tsx",
-                lineNumber: 164,
+                lineNumber: 177,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/chatbot/page.tsx",
-        lineNumber: 130,
+        lineNumber: 139,
         columnNumber: 5
     }, this);
 }
