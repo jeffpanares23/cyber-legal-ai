@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import Link from "next/link";
+import GoogleLoginButton from "../components/GoogleLoginButton";
 import { useRouter } from "next/navigation";
 import LottiePlayer from "../components/LottieClientOnly";
 import Cookies from "js-cookie";
@@ -166,6 +167,9 @@ export default function LoginPage() {
               )}
             </button>
           </form>
+          <div className="flex items-center justify-center">
+            <GoogleLoginButton />
+          </div>
 
           <div className="flex justify-between text-sm mt-4 text-gray-600">
             <Link href="#" className="hover:underline text-indigo-600">
