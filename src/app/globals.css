@@ -46,6 +46,18 @@
       transform: scale(1);
     }
   }
+
+  @keyframes flowGlow {
+    0% {
+      filter: hue-rotate(0deg);
+    }
+    100% {
+      filter: hue-rotate(360deg);
+    }
+  }
+  .bg-animated {
+    animation: flowGlow 15s linear infinite;
+  }
 }
 
 body {

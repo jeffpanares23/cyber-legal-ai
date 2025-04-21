@@ -1,28 +1,23 @@
 "use client";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
-import Link from "next/link";
-import GoogleLoginButton from "../components/GoogleLoginButton";
 import { useRouter } from "next/navigation";
-import LottiePlayer from "../components/LottieClientOnly";
 import Cookies from "js-cookie";
-
-Cookies.set("cyberlegal-auth", "true");
+import Image from "next/image";
+import GoogleLoginButton from "../components/GoogleLoginButton";
 
 export default function LoginPage() {
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
   const [email, setEmail] = useState("admin@cyberlegal.ai");
   const [password, setPassword] = useState("letmein");
-
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  // const [loading, setLoading] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
 
   const router = useRouter();
+
+  const VALID_EMAIL = "admin@cyberlegal.ai";
+  const VALID_PASSWORD = "letmein";
 
   useEffect(() => {
     if (loginSuccess) {
@@ -31,11 +26,7 @@ export default function LoginPage() {
       }, 300);
       return () => clearTimeout(timer);
     }
-  }, [loginSuccess, router]);
-
-  // Static credentials
-  const VALID_EMAIL = "admin@cyberlegal.ai";
-  const VALID_PASSWORD = "letmein";
+  }, [loginSuccess]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,133 +42,113 @@ export default function LoginPage() {
 
       setTimeout(() => {
         sessionStorage.setItem("cyberlegal-auth", "true");
-        setLoginSuccess(true); // 👈 triggers the useEffect
+        Cookies.set("cyberlegal-auth", "true");
+        setLoginSuccess(true);
         setIsLoggingIn(false);
-      }, 3000);
+      }, 1500);
     } else {
       setError("Invalid credentials. Please try again.");
     }
   };
 
   return (
-    <main className="min-h-screen flex">
-      {/* Left side */}
-      <div className="w-1/2 hidden md:flex items-center justify-center bg-gradient-to-br from-indigo-100 to-white">
-        <div className="max-w-md text-center">
-          {isLoggingIn ? (
-            loginSuccess ? (
-              <LottiePlayer
-                autoplay
-                keepLastFrame
-                src="https://lottie.host/19a10319-ef99-4b58-8381-0a09f6c845bb/N5vuJPPv6X.json"
-                style={{ height: "200px", width: "200px" }}
-              />
-            ) : (
-              <LottiePlayer
-                autoplay
-                loop
-                src="https://lottie.host/19a10319-ef99-4b58-8381-0a09f6c845bb/N5vuJPPv6X.json"
-                style={{ height: "180px", width: "180px" }}
-              />
-            )
-          ) : (
-            <>
-              <h1 className="text-4xl font-bold text-indigo-700 mb-4">
-                Your Cybersecurity
-              </h1>
-              <p className="text-gray-600">
-                Access your AI-powered legal assistant anytime.
-              </p>
-            </>
-          )}
+    <main className="min-h-screen flex bg-[#0B0F1A] text-white font-poppins relative">
+      {/* Left Side */}
+      <div className="w-1/2 hidden lg:flex items-center justify-center px-10 relative z-10">
+        <div className="max-w-md">
+          <h1 className="text-4xl font-semibold leading-snug">
+            Your <br />
+            <span className="text-white">Cybersecurity</span> <br />
+            <span className="text-pinkAccent">Assistant</span>
+          </h1>
         </div>
       </div>
 
-      {/* Right side */}
-      <div className="w-full md:w-1/2 flex items-center justify-center p-8">
-        <div className="w-full max-w-sm space-y-6">
-          <h2 className="text-2xl font-semibold text-gray-800">
-            Login to Cyberlegal.AI
+      {/* Background Image */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <Image
+          src="/login-bg.png"
+          alt="Background Graphic"
+          layout="fill"
+          objectFit="cover"
+          className="opacity-30 lg:opacity-100"
+        />
+      </div>
+
+      {/* Right Side */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center z-10 px-6 py-8">
+        <div className="w-full max-w-sm bg-[#111827] rounded-lg border border-white/10 px-8 py-10 shadow-lg">
+          <h2 className="text-center text-xl font-bold mb-6">
+            Cyber <span className="text-pinkAccent">Legal</span>
           </h2>
 
-          {error && (
-            <div className="bg-red-100 text-red-700 px-4 py-2 rounded text-sm">
-              {error}
-            </div>
-          )}
+          <h3 className="text-sm font-semibold mb-4">Sign In</h3>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Email
-              </label>
+            <input
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Username"
+              className="w-full px-4 py-2 rounded-full bg-transparent border border-white/20 text-sm focus:outline-none focus:ring-2 focus:ring-pinkAccent"
+            />
+            <div className="relative">
               <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="you@example.com"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                className="w-full px-4 py-2 rounded-full bg-transparent border border-white/20 text-sm focus:outline-none focus:ring-2 focus:ring-pinkAccent pr-10"
               />
-            </div>
-
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-2 text-white/50"
               >
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md pr-10 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  placeholder="••••••••"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 hover:text-indigo-600"
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
             </div>
 
             <button
               type="submit"
-              className="w-full py-2 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition flex items-center justify-center"
-              disabled={isLoggingIn || loginSuccess}
+              disabled={isLoggingIn}
+              className="w-full py-2 rounded-full bg-pinkAccent hover:bg-pink-600 transition text-sm font-semibold text-white"
             >
-              {isLoggingIn && !loginSuccess ? (
-                <>
-                  <Loader2 className="animate-spin mr-2 h-4 w-4" />
-                  Logging in...
-                </>
-              ) : loginSuccess ? (
-                "Redirecting..."
+              {isLoggingIn ? (
+                <span className="flex items-center justify-center gap-2">
+                  <Loader2 className="animate-spin" size={16} /> Signing in...
+                </span>
               ) : (
-                "Login"
+                "SIGN IN"
               )}
             </button>
           </form>
-          <div className="flex items-center justify-center">
+
+          {/* 👇 Google login */}
+          <div className=" rounded-full mt-6">
             <GoogleLoginButton />
           </div>
 
-          <div className="flex justify-between text-sm mt-4 text-gray-600">
-            <Link href="#" className="hover:underline text-indigo-600">
-              Forgot password?
-            </Link>
-            <Link href="#" className="hover:underline">
-              Create an account
-            </Link>
+          {error && (
+            <p className="mt-3 text-xs text-red-500 font-medium">{error}</p>
+          )}
+
+          <p className="text-center mt-4 text-xs italic text-white/70">
+            Forgot password?
+          </p>
+
+          <div className="mt-6 flex justify-center gap-4 text-xs text-white/50">
+            <a href="#" className="hover:text-white">
+              Privacy
+            </a>
+            <span>|</span>
+            <a href="#" className="hover:text-white">
+              Terms
+            </a>
+            <span>|</span>
+            <a href="#" className="hover:text-white">
+              Contact
+            </a>
           </div>
         </div>
       </div>
