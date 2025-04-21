@@ -84,7 +84,7 @@ const ReferenceBox: React.FC<ReferenceBoxProps> = ({
     <AnimatePresence>
       <motion.div
         key="ref-box"
-        className="fixed lg:static top-0 right-0 h-full z-40 border-l border-zinc-800 bg-white dark:bg-zinc-900 shadow-xl overflow-y-auto"
+        className="fixed lg:static top-0 right-0 h-full z-40 bg-[#1d2532] rounded-md shadow-xl overflow-y-auto"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -118,7 +118,7 @@ const ReferenceBox: React.FC<ReferenceBoxProps> = ({
 
             {/* Reference Source */}
             {sources && (
-              <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow p-4 text-sm text-gray-800 dark:text-gray-100 space-y-2 mb-4">
+              <div className="bg-white rounded-xl shadow p-4 text-sm text-gray-800 dark:text-gray-100 space-y-2 mb-4">
                 {rules?.length > 0 && (
                   <>
                     <h3 className="font-semibold text-base mb-2">

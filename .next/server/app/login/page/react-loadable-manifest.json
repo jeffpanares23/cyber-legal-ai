@@ -3,11 +3,7 @@
     "id": "[project]/node_modules/@lottiefiles/react-lottie-player/dist/lottie-react.esm.js [app-client] (ecmascript, next/dynamic entry)",
     "files": [
       "static/chunks/node_modules_@lottiefiles_react-lottie-player_dist_lottie-react_esm_230d3664.js",
-<<<<<<< Updated upstream
-      "static/chunks/node_modules_@lottiefiles_react-lottie-player_dist_lottie-react_esm_89a3bfc1.js"
-=======
-      "static/chunks/node_modules_@lottiefiles_react-lottie-player_dist_lottie-react_esm_fb7730f1.js"
->>>>>>> Stashed changes
+      "static/chunks/node_modules_@lottiefiles_react-lottie-player_dist_lottie-react_esm_13ef1033.js"
     ]
   }
 }

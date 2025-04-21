@@ -242,7 +242,7 @@ export default function ChatbotPage() {
   if (!authChecked) return null;
 
   return (
-    <div className="flex h-screen overflow-hidden bg-zinc-900 text-white">
+    <div className="flex h-screen overflow-hidden text-white">
       <ChatSidebar
         sidebarOpen={sidebarOpen && !isReferenceExpanded}
         setSidebarOpen={setSidebarOpen}

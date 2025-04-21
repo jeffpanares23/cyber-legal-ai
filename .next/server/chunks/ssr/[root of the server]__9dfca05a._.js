@@ -101,24 +101,24 @@ function RootLayout({ children }) {
                         reverseOrder: false
                     }, void 0, false, {
                         fileName: "[project]/src/app/layout.tsx",
-                        lineNumber: 34,
-                        columnNumber: 9
+                        lineNumber: 39,
+                        columnNumber: 11
                     }, this),
                     " "
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/layout.tsx",
-                lineNumber: 32,
-                columnNumber: 7
+                lineNumber: 35,
+                columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/src/app/layout.tsx",
-            lineNumber: 31,
+            lineNumber: 32,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/app/layout.tsx",
-        lineNumber: 30,
+        lineNumber: 31,
         columnNumber: 5
     }, this);
 }

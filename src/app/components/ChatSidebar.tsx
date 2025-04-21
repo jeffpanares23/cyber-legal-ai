@@ -28,7 +28,7 @@ const ChatSidebar: FC<ChatSidebarProps> = ({
   return (
     <>
       <aside
-        className={`overflow-auto fixed md:static z-30 top-0 left-0 h-full w-64 bg-zinc-950 border-r border-zinc-800 px-4 transform transition-transform duration-200 ease-in-out ${
+        className={`overflow-auto fixed md:static z-30 top-0 left-0 h-full w-64 px-4 transform transition-transform duration-200 ease-in-out ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         }`}
       >
@@ -36,7 +36,6 @@ const ChatSidebar: FC<ChatSidebarProps> = ({
           <h2 className="text-lg font-semibold mb-4">Cyberlegal.AI</h2>
         </div>
         <SidebarNavigation onNewChatClick={onNewChatClick} />
-
 
         {/* ✅ Forward session props to SavedChatsSidebar */}
         <SavedChatsSidebar

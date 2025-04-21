@@ -13,7 +13,6 @@ export default function ChatInput({
   onInputChange,
   onSend,
 }: ChatInputProps) {
-
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     if (inputRef.current) {
@@ -22,10 +21,7 @@ export default function ChatInput({
   }, []);
 
   return (
-    <form
-      onSubmit={onSend}
-      className="w-full border-t border-zinc-800 bg-zinc-900 p-4"
-    >
+    <form onSubmit={onSend} className="w-full border-t p-4">
       <div className="max-w-3xl mx-auto flex items-center gap-2">
         <input
           ref={inputRef}
@@ -44,4 +40,4 @@ export default function ChatInput({
       </div>
     </form>
   );
-};
+}

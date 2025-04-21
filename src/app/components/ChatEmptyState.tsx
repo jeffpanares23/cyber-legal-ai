@@ -63,7 +63,7 @@ const ChatEmptyState: FC<ChatEmptyStateProps> = ({
         What legal question do you have in mind?
       </h2>
 
-      <div className="bg-zinc-900 border border-zinc-700 rounded-lg shadow-md w-full px-4 sm:px-6 py-4 sm:py-6 space-y-6">
+      <div className="border border-zinc-700 rounded-lg shadow-md w-full px-4 sm:px-6 py-4 sm:py-6 space-y-6">
         {/* Role + Tone Dropdowns */}
         <div className="flex sm:flex-row gap-3 sm:gap-4 text-xs text-zinc-300">
           <div className="flex items-center gap-1">
