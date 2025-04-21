@@ -83,7 +83,7 @@ export default function LoginPage() {
           ) : (
             <>
               <h1 className="text-4xl font-bold text-indigo-700 mb-4">
-                Welcome Back
+                Your Cybersecurity
               </h1>
               <p className="text-gray-600">
                 Access your AI-powered legal assistant anytime.
