@@ -13,7 +13,7 @@ import ChatHeader from "../components/ChatHeader";
 import ChatMessageList from "../components/chat/ChatMessageList";
 import NewChatConfirmModal from "../components/NewChatConfirmModal";
 import ReferenceBox from "../components/chat/ReferenceBox";
-
+import useIsMobile from "../hooks/useIsMobile";
 import { ChatMessage, ChatSession } from "@/types/ChatTypes";
 import { saveChatSessions, loadChatSessions } from "@/utils/chatStorage";
 import { useAutoScroll } from "../hooks/useAutoScroll";
@@ -38,6 +38,7 @@ function generateSmartTitle(input: string): string {
 
 export default function ChatbotPage() {
   const router = useRouter();
+  const isMobile = useIsMobile(); // ✅ Mobile detection
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [title, setTitle] = useState<string>("");
   const [input, setInput] = useState("");
@@ -46,6 +47,18 @@ export default function ChatbotPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
+  const [isReferenceExpanded, setIsReferenceExpanded] = useState(false);
+  const [isReferenceBoxExpanded, setIsReferenceBoxExpanded] = useState(false);
+  const [selectedReference, setSelectedReference] = useState<string | null>(
+    null
+  );
+  const [refBoxExpanded, setRefBoxExpanded] = useState(false);
+
+  const handleReferenceClick = (ref: string) => {
+    setSelectedReference(ref);
+    setIsReferenceBoxExpanded(true);
+  };
+
   // const chatRef = useRef<HTMLDivElement>(null);
   // const chatRef = useAutoScroll(messages, isTyping);
   const {
@@ -53,10 +66,7 @@ export default function ChatbotPage() {
     showScrollButton,
     scrollToBottom,
   } = useAutoScroll(messages, isTyping);
-  const [sources, setSources] = useState<{
-    rules?: { title: string; description: string }[];
-    cases?: { title: string; description: string }[];
-  } | null>(null);
+
   const [showNewChatModal, setShowNewChatModal] = useState(false);
 
   const hasAiResponse = messages.some((msg) => msg.sender === "bot");
@@ -88,6 +98,11 @@ export default function ChatbotPage() {
   useEffect(() => {
     setSessions(loadChatSessions());
   }, []);
+
+  useEffect(() => {
+    setSelectedReference(null);
+    setIsReferenceBoxExpanded(false);
+  }, [activeSessionId]);
 
   const persistSession = (updatedMessages: ChatMessage[], title: string) => {
     const newSession: ChatSession = {
@@ -195,21 +210,16 @@ export default function ChatbotPage() {
       const fullChat: ChatMessage[] = [...messages, userMessage, botReply];
 
       // Add sources if present
-      // if (data.sources && data.sources.length > 0) {
-      //   const formattedSources = data.sources
-      //     .map((src: string) => `- ${src}`)
-      //     .join("\n");
+      if (data.sources && data.sources.length > 0) {
+        const formattedSources = data.sources
+          .map((src: string) => `- ${src}`)
+          .join("\n");
 
-      //   fullChat.push({
-      //     sender: "bot",
-      //     content: `📚 **Sources:**\n${formattedSources}`,
-      //     role: "",
-      //   });
-      // }
-      if (data.sources) {
-        setSources(data.sources);
-      } else {
-        setSources(null); // Clear previous sources if none returned
+        fullChat.push({
+          sender: "bot",
+          content: `📚 **Sources:**\n${formattedSources}`,
+          role: "",
+        });
       }
 
       setMessages(fullChat);
@@ -234,7 +244,7 @@ export default function ChatbotPage() {
   return (
     <div className="flex h-screen overflow-hidden bg-zinc-900 text-white">
       <ChatSidebar
-        sidebarOpen={sidebarOpen}
+        sidebarOpen={sidebarOpen && !isReferenceExpanded}
         setSidebarOpen={setSidebarOpen}
         onSelectSession={handleSelectSession}
         sessions={sessions}
@@ -246,7 +256,7 @@ export default function ChatbotPage() {
         <ChatHeader setSidebarOpen={setSidebarOpen} />
         <div className="flex-1 overflow-y-auto px-6 py-4">
           {messages.length === 0 && !isTyping ? (
-            <div className="max-w-3xl mx-auto">
+            <div className="max-w-5xl mx-auto">
               <ChatEmptyState
                 onPresetClick={sendPreset}
                 input={input}
@@ -255,21 +265,45 @@ export default function ChatbotPage() {
               />
             </div>
           ) : (
-            <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-6">
+            <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-6 transition-all duration-300">
               {/* 💬 Chat Area */}
-              <div className="flex-1 w-full">
+              <div
+                className={`flex-1 w-full transition-all duration-300 ${
+                  isReferenceExpanded
+                    ? "lg:w-[calc(100%-28rem)]"
+                    : "lg:w-[calc(100%-20rem)]"
+                }`}
+              >
                 <ChatMessageList
                   messages={messages}
                   isTyping={isTyping}
                   smartTitle={title}
                   chatRef={chatRef}
+                  setSelectedReference={setSelectedReference}
                 />
               </div>
 
               {/* 📚 Reference Box */}
-              <div className="hidden lg:block w-full max-w-sm">
-                <ReferenceBox sources={sources} />
-              </div>
+              {/* <div className="hidden lg:block">
+                <ReferenceBox
+                  // expanded={isReferenceExpanded}
+                  // onToggle={() => setIsReferenceExpanded((prev) => !prev)}
+                  expanded={refBoxExpanded}
+                  onToggle={() => setRefBoxExpanded((prev) => !prev)}
+                  content={selectedReference}
+                />
+              </div> */}
+              {selectedReference && (
+                <ReferenceBox
+                  expanded={isReferenceBoxExpanded}
+                  content={selectedReference}
+                  onToggle={() => setIsReferenceBoxExpanded((prev) => !prev)}
+                  onClose={() => {
+                    setSelectedReference(null); // ✅ Auto-hide the ReferenceBox
+                    setIsReferenceBoxExpanded(false);
+                  }}
+                />
+              )}
             </div>
           )}
         </div>
