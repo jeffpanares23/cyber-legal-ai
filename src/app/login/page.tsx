@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import Image from "next/image";
@@ -32,7 +33,6 @@ export default function LoginPage() {
       return () => clearTimeout(timer);
     }
   }, [loginSuccess, router]);
-
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,102 +83,62 @@ export default function LoginPage() {
           backgroundPositionY: "center",
         }}
       >
-        <div className="max-w-md text-center">
-          {isLoggingIn ? (
-            loginSuccess ? (
-              <LottiePlayer
-                autoplay
-                keepLastFrame
-                src="https://lottie.host/19a10319-ef99-4b58-8381-0a09f6c845bb/N5vuJPPv6X.json"
-                style={{ height: "200px", width: "200px" }}
-              />
-            ) : (
-              <LottiePlayer
-                autoplay
-                loop
-                src="https://lottie.host/19a10319-ef99-4b58-8381-0a09f6c845bb/N5vuJPPv6X.json"
-                style={{ height: "180px", width: "180px" }}
-              />
-            )
-          ) : (
-            <>
-              {/* <h1 className="text-4xl font-bold text-indigo-700 mb-4">
-                Your Cybersecurity
-              </h1>
-              <p className="text-gray-600">
-                Access your AI-powered legal assistant anytime.
-              </p> */}
-              <div className="w-1/2 hidden lg:flex flex-col justify-center items-start px-20">
-                <h1 className="text-4xl font-semibold mb-4">
-                  Your <br />
-                  Cybersecurity <br />
-                  <span className="text-pink-500">Assistant</span>
-                </h1>
-                {/* Optional: use an animated SVG or Lottie for those gradient lines */}
-              </div>
-            </>
-          )}
+        <div className="max-w-md text-start translate-x-[-35%] translate-y-[-80%]">
+          <div className="w-1/2 hidden lg:flex flex-col justify-center items-start px-20">
+            <h1 className="text-5xl mb-4 leading-tight tracking-wider font-poppins">
+              Your <br />
+              Cybersecurity <br />
+              <span className="text-pink-500">Assistant</span>
+            </h1>
+            {/* Optional: use an animated SVG or Lottie for those gradient lines */}
+          </div>
         </div>
       </div>
 
       {/* Right side */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center px-8 py-16">
-        <div className="bg-[#263149] p-32 rounded-xl shadow-xl w-full max-w-2xl login-bg">
-          <h2 className="text-center text-xl font-bold mb-6">
+      <div className="w-full lg:w-1/2 h-[100vh] flex items-center px-8 py-28">
+        <div className="bg-[#212E4A33] p-10 sm:p-20 md:p-28 rounded-3xl w-full max-w-2xl h-full login-bg content-center">
+          <h2 className="text-center text-3xl font-bold mb-6">
             <span className="text-white">Cyber</span>
             <span className="text-pink-500"> Legal</span>
           </h2>
 
-          <h3 className="text-sm font-semibold mb-6 text-white/80 text-center tracking-wide">
+          <h1 className="text-2xl font-semibold mb-6 text-white/80 tracking-wide">
             Sign In
-          </h3>
+          </h1>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <input
-              type="text"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Username"
-              className="w-full px-5 py-3 rounded-full bg-[#2A314B] border border-white/10 text-sm placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-500"
-            />
+          <form onSubmit={handleSubmit} className="space-y-3">
             <div className="relative">
               <input
                 type="email"
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-5 py-3 rounded-full bg-[#2A314B] border border-white/10 text-md placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-500 hover:scale-105 transition"
                 placeholder="you@example.com"
+              />
+            </div>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-5 py-3 rounded-full bg-[#2A314B] border border-white/10 text-md placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-500 hover:scale-105 transition"
+                placeholder="••••••••"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-[13px] text-white/50 hover:text-white"
+                className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 hover:text-pink-500"
               >
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-full pr-10 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  placeholder="••••••••"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 hover:text-indigo-600"
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
             </div>
 
             <button
               type="submit"
-              className="w-full mt-4 py-2 rounded-full bg-pink-500 text-white font-semibold hover:bg-pink-600 transition"
+              className="w-full py-3  rounded-full bg-pink-500 text-white hover:bg-pink-600 hover:scale-105 transition"
               disabled={isLoggingIn || loginSuccess}
             >
               {isLoggingIn ? (
@@ -189,28 +149,42 @@ export default function LoginPage() {
                 "SIGN IN"
               )}
             </button>
-          </form>
-          <div className="flex items-center justify-center py-3">
-            <GoogleLoginButton />
-          </div>
-
-          {error && (
-            <p className="mt-3 text-xs text-red-500 font-medium text-center">
-              {error}
-            </p>
-          )}
-
-          <div className="mt-4 text-left">
-            <p className="text-xs italic text-white/60 hover:text-white transition cursor-pointer">
-              Forgot password?
-            </Link>
+            {error && (
+              <p className="mt-3 text-xs text-red-500 font-medium text-center">
+                {error}
+              </p>
+            )}
+            <div className="m-4 flex items-center gap-4 text-white/50 text-sm">
+              <div className="flex-grow h-px bg-white/20"></div>
+              <span className="text-xs text-white/60">Or</span>
+              <div className="flex-grow h-px bg-white/20"></div>
+            </div>
+            <div className="w-full rounded-full overflow-hidden hover:scale-105 transition">
+              <GoogleLoginButton />
+            </div>
+            <span className="text-white/60 text-sm">
+              Don't you have an account? &nbsp;
+            </span>
             <Link
               href="/register"
-              className="hover:underline text-indigo-600 cursor-pointer"
+              className="text-white/60 text-sm hover:text-white transition cursor-pointer"
             >
-              Create an account
+              Sign up
             </Link>
-          </div>
+          </form>
+        </div>
+        <div className="mt-8 flex justify-center gap-4 text-sm text-white/50 absolute bottom-12">
+          <a href="#" className="hover:text-white transition">
+            Privacy
+          </a>
+          <span>|</span>
+          <a href="#" className="hover:text-white transition">
+            Terms
+          </a>
+          <span>|</span>
+          <a href="#" className="hover:text-white transition">
+            Contact
+          </a>
         </div>
       </div>
     </main>
