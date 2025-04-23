@@ -10,3 +10,8 @@ export interface ChatSession {
   messages: ChatMessage[];
   createdAt: string;
 }
+
+export type SourceItem = {
+  title: string;
+  description: string;
+};

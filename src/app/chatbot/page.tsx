@@ -14,7 +14,7 @@ import ChatMessageList from "../components/chat/ChatMessageList";
 import NewChatConfirmModal from "../components/NewChatConfirmModal";
 import ReferenceBox from "../components/chat/ReferenceBox";
 import useIsMobile from "../hooks/useIsMobile";
-import { ChatMessage, ChatSession } from "@/types/ChatTypes";
+import { ChatMessage, ChatSession, SourceItem } from "@/types/ChatTypes";
 import { saveChatSessions, loadChatSessions } from "@/utils/chatStorage";
 import { useAutoScroll } from "../hooks/useAutoScroll";
 
@@ -53,6 +53,10 @@ export default function ChatbotPage() {
     null
   );
   const [refBoxExpanded, setRefBoxExpanded] = useState(false);
+  const [sources, setSources] = useState<{
+    rules?: SourceItem[];
+    cases?: SourceItem[];
+  } | null>(null);
 
   const handleReferenceClick = (ref: string) => {
     setSelectedReference(ref);
@@ -201,6 +205,7 @@ export default function ChatbotPage() {
       });
 
       const data = await res.json();
+      console.log("📚 Received sources:", data.sources);
       const botReply: ChatMessage = {
         sender: "bot",
         content: data.response,
@@ -210,14 +215,32 @@ export default function ChatbotPage() {
       const fullChat: ChatMessage[] = [...messages, userMessage, botReply];
 
       // Add sources if present
-      if (data.sources && data.sources.length > 0) {
-        const formattedSources = data.sources
-          .map((src: string) => `- ${src}`)
+      // if (data.sources) {
+      //   console.log("✅ SETTING SOURCES:", data.sources);
+      //   setSources(data.sources);
+      //   setIsReferenceBoxExpanded(true);
+      // }
+      if (
+        data.sources &&
+        (data.sources.rules?.length > 0 || data.sources.cases?.length > 0)
+      ) {
+        const allSources = [
+          ...(data.sources.rules || []),
+          ...(data.sources.cases || []),
+        ];
+        (window as any).latestSources = allSources;
+        // Save to state for ReferenceBox
+        setSources(data.sources);
+        setIsReferenceBoxExpanded(true); // Optional: auto-show ReferenceBox
+
+        // Render only the titles in the message
+        const formattedTitles = allSources
+          .map((src) => `- ${src.title}`)
           .join("\n");
 
         fullChat.push({
           sender: "bot",
-          content: `📚 **Sources:**\n${formattedSources}`,
+          content: `📚 **Sources:**\n${formattedTitles}`,
           role: "",
         });
       }
@@ -293,17 +316,17 @@ export default function ChatbotPage() {
                   content={selectedReference}
                 />
               </div> */}
-              {selectedReference && (
-                <ReferenceBox
-                  expanded={isReferenceBoxExpanded}
-                  content={selectedReference}
-                  onToggle={() => setIsReferenceBoxExpanded((prev) => !prev)}
-                  onClose={() => {
-                    setSelectedReference(null); // ✅ Auto-hide the ReferenceBox
-                    setIsReferenceBoxExpanded(false);
-                  }}
-                />
-              )}
+
+              <ReferenceBox
+                expanded={isReferenceBoxExpanded}
+                onToggle={() => setIsReferenceBoxExpanded((prev) => !prev)}
+                onClose={() => {
+                  setSelectedReference(null);
+                  setIsReferenceBoxExpanded(false);
+                }}
+                content={selectedReference}
+                sources={sources}
+              />
             </div>
           )}
         </div>
