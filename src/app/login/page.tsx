@@ -52,14 +52,14 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen flex bg-[#0B0F1A] text-white font-poppins relative">
+    <main className="min-h-screen flex text-white font-poppins relative">
       {/* Left Side */}
       <div className="w-1/2 hidden lg:flex items-center justify-center px-10 relative z-10">
         <div className="max-w-md">
           <h1 className="text-4xl font-semibold leading-snug">
             Your <br />
             <span className="text-white">Cybersecurity</span> <br />
-            <span className="text-pinkAccent">Assistant</span>
+            <span className="text-pink-500">Assistant</span>
           </h1>
         </div>
       </div>
@@ -76,21 +76,24 @@ export default function LoginPage() {
       </div>
 
       {/* Right Side */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center z-10 px-6 py-8">
-        <div className="w-full max-w-sm bg-[#111827] rounded-lg border border-white/10 px-8 py-10 shadow-lg">
-          <h2 className="text-center text-xl font-bold mb-6">
-            Cyber <span className="text-pinkAccent">Legal</span>
+      <div className="w-full lg:w-1/2 flex items-center justify-center z-10 px-4 sm:px-6 md:px-10 py-12">
+        <div className="w-full max-w-2xl bg-[#1B2238] rounded-[36px] px-32 py-10">
+          <h2 className="text-center text-2xl font-bold mb-6 leading-snug">
+            <span className="text-white">Cyber</span>{" "}
+            <span className="text-pink-500">Legal</span>
           </h2>
 
-          <h3 className="text-sm font-semibold mb-4">Sign In</h3>
+          <h3 className="text-sm font-semibold mb-6 text-white/80 text-center tracking-wide">
+            Sign In
+          </h3>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <input
               type="text"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Username"
-              className="w-full px-4 py-2 rounded-full bg-transparent border border-white/20 text-sm focus:outline-none focus:ring-2 focus:ring-pinkAccent"
+              className="w-full px-5 py-3 rounded-full bg-[#2A314B] border border-white/10 text-sm placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-500"
             />
             <div className="relative">
               <input
@@ -98,21 +101,21 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
-                className="w-full px-4 py-2 rounded-full bg-transparent border border-white/20 text-sm focus:outline-none focus:ring-2 focus:ring-pinkAccent pr-10"
+                className="w-full px-5 py-3 rounded-full bg-[#2A314B] border border-white/10 text-sm placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-500 pr-10"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-2 text-white/50"
+                className="absolute right-3 top-[13px] text-white/50 hover:text-white"
               >
-                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
 
             <button
               type="submit"
               disabled={isLoggingIn}
-              className="w-full py-2 rounded-full bg-pinkAccent hover:bg-pink-600 transition text-sm font-semibold text-white"
+              className="w-full py-3 rounded-full bg-pink-500 text-white font-semibold text-sm transition hover:bg-pink-600 hover:scale-[1.02]"
             >
               {isLoggingIn ? (
                 <span className="flex items-center justify-center gap-2">
@@ -124,29 +127,32 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* 👇 Google login */}
-          <div className=" rounded-full mt-6">
+          <div className="mt-4 rounded-full overflow-hidden">
             <GoogleLoginButton />
           </div>
 
           {error && (
-            <p className="mt-3 text-xs text-red-500 font-medium">{error}</p>
+            <p className="mt-3 text-xs text-red-500 font-medium text-center">
+              {error}
+            </p>
           )}
 
-          <p className="text-center mt-4 text-xs italic text-white/70">
-            Forgot password?
-          </p>
+          <div className="mt-4 text-left">
+            <p className="text-xs italic text-white/60 hover:text-white transition cursor-pointer">
+              Forgot password?
+            </p>
+          </div>
 
-          <div className="mt-6 flex justify-center gap-4 text-xs text-white/50">
-            <a href="#" className="hover:text-white">
+          <div className="mt-8 flex justify-center gap-4 text-xs text-white/50">
+            <a href="#" className="hover:text-white transition">
               Privacy
             </a>
             <span>|</span>
-            <a href="#" className="hover:text-white">
+            <a href="#" className="hover:text-white transition">
               Terms
             </a>
             <span>|</span>
-            <a href="#" className="hover:text-white">
+            <a href="#" className="hover:text-white transition">
               Contact
             </a>
           </div>
