@@ -10,11 +10,13 @@ import Cookies from "js-cookie";
 
 Cookies.set("cyberlegal-auth", "true");
 
+const customBG = {};
+
 export default function LoginPage() {
   // const [email, setEmail] = useState('');
   // const [password, setPassword] = useState('');
-  const [email, setEmail] = useState("admin@cyberlegal.ai");
-  const [password, setPassword] = useState("letmein");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
@@ -33,36 +35,56 @@ export default function LoginPage() {
     }
   }, [loginSuccess, router]);
 
-  // Static credentials
-  const VALID_EMAIL = "admin@cyberlegal.ai";
-  const VALID_PASSWORD = "letmein";
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
 
     if (!email || !password) {
       setError("Email and password are required.");
       return;
     }
 
-    if (email === VALID_EMAIL && password === VALID_PASSWORD) {
-      setError("");
+    try {
       setIsLoggingIn(true);
+      const response = await fetch("http://127.0.0.1:8000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          username: email,
+          password: password,
+        }),
+      });
 
-      setTimeout(() => {
-        sessionStorage.setItem("cyberlegal-auth", "true");
-        setLoginSuccess(true); // 👈 triggers the useEffect
-        setIsLoggingIn(false);
-      }, 3000);
-    } else {
-      setError("Invalid credentials. Please try again.");
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.detail || "Login failed");
+      }
+
+      sessionStorage.setItem("cyberlegal-auth", "true");
+      sessionStorage.setItem("access_token", data.access_token);
+      setLoginSuccess(true);
+      setIsLoggingIn(false);
+    } catch (err: any) {
+      setIsLoggingIn(false);
+      setError(err.message);
     }
   };
 
   return (
-    <main className="min-h-screen flex">
+    <main className="min-h-screen flex text-white">
       {/* Left side */}
-      <div className="w-1/2 hidden md:flex items-center justify-center bg-gradient-to-br from-indigo-100 to-white">
+      <div
+        className="w-1/2 hidden md:flex items-center justify-center"
+        style={{
+          backgroundImage: "url('../../../loginbg.png')",
+          backgroundSize: "cover",
+          backgroundPositionY: "center",
+        }}
+      >
         <div className="max-w-md text-center">
           {isLoggingIn ? (
             loginSuccess ? (
@@ -82,22 +104,31 @@ export default function LoginPage() {
             )
           ) : (
             <>
-              <h1 className="text-4xl font-bold text-indigo-700 mb-4">
+              {/* <h1 className="text-4xl font-bold text-indigo-700 mb-4">
                 Your Cybersecurity
               </h1>
               <p className="text-gray-600">
                 Access your AI-powered legal assistant anytime.
-              </p>
+              </p> */}
+              <div className="w-1/2 hidden lg:flex flex-col justify-center items-start px-20">
+                <h1 className="text-4xl font-semibold mb-4">
+                  Your <br />
+                  Cybersecurity <br />
+                  <span className="text-pink-500">Assistant</span>
+                </h1>
+                {/* Optional: use an animated SVG or Lottie for those gradient lines */}
+              </div>
             </>
           )}
         </div>
       </div>
 
       {/* Right side */}
-      <div className="w-full md:w-1/2 flex items-center justify-center p-8">
-        <div className="w-full max-w-sm space-y-6">
-          <h2 className="text-2xl font-semibold text-gray-800">
-            Login to Cyberlegal.AI
+      <div className="w-full lg:w-1/2 flex items-center justify-center px-8 py-16">
+        <div className="bg-[#263149] p-32 rounded-xl shadow-xl w-full max-w-2xl login-bg">
+          <h2 className="text-center text-xl font-bold mb-6">
+            <span className="text-white">Cyber</span>
+            <span className="text-pink-500"> Legal</span>
           </h2>
 
           {error && (
@@ -119,7 +150,7 @@ export default function LoginPage() {
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 placeholder="you@example.com"
               />
             </div>
@@ -137,7 +168,7 @@ export default function LoginPage() {
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md pr-10 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-full pr-10 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   placeholder="••••••••"
                 />
                 <button
@@ -152,7 +183,7 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="w-full py-2 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition flex items-center justify-center"
+              className="w-full mt-4 py-2 rounded-full bg-pink-500 text-white font-semibold hover:bg-pink-600 transition"
               disabled={isLoggingIn || loginSuccess}
             >
               {isLoggingIn && !loginSuccess ? (
@@ -167,7 +198,7 @@ export default function LoginPage() {
               )}
             </button>
           </form>
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-center py-3">
             <GoogleLoginButton />
           </div>
 
@@ -175,7 +206,10 @@ export default function LoginPage() {
             <Link href="#" className="hover:underline text-indigo-600">
               Forgot password?
             </Link>
-            <Link href="#" className="hover:underline">
+            <Link
+              href="/register"
+              className="hover:underline text-indigo-600 cursor-pointer"
+            >
               Create an account
             </Link>
           </div>
