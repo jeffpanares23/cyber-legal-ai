@@ -1,11 +1,14 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useState } from "react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
-import Image from "next/image";
 import GoogleLoginButton from "../components/GoogleLoginButton";
+import { useRouter } from "next/navigation";
+import LottiePlayer from "../components/LottieClientOnly";
+import Cookies from "js-cookie";
+
+Cookies.set("cyberlegal-auth", "true");
 
 const customBG = {};
 
@@ -17,13 +20,11 @@ export default function LoginPage() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  // const [loading, setLoading] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
 
   const router = useRouter();
-
-  const VALID_EMAIL = "admin@cyberlegal.ai";
-  const VALID_PASSWORD = "letmein";
 
   useEffect(() => {
     if (loginSuccess) {
@@ -58,12 +59,15 @@ export default function LoginPage() {
 
       const data = await response.json();
 
+      console.log("Login Data: ", data);
+
       if (!response.ok) {
         throw new Error(data.detail || "Login failed");
       }
 
       sessionStorage.setItem("cyberlegal-auth", "true");
       sessionStorage.setItem("access_token", data.access_token);
+      sessionStorage.setItem("user_name", data.name);
       setLoginSuccess(true);
       setIsLoggingIn(false);
     } catch (err: any) {
