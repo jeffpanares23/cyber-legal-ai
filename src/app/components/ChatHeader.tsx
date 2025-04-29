@@ -12,9 +12,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"; //
 
 interface ChatHeaderProps {
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  userName: string;
 }
 
-const ChatHeader: FC<ChatHeaderProps> = ({ setSidebarOpen }) => {
+const ChatHeader: FC<ChatHeaderProps> = ({ setSidebarOpen, userName }) => {
   return (
     <header className="w-full px-6 py-4 flex items-center justify-between shadow-sm">
       {/* Left: Mobile Menu + Title */}
@@ -32,10 +33,14 @@ const ChatHeader: FC<ChatHeaderProps> = ({ setSidebarOpen }) => {
 
       {/* Right: Avatar and Dropdown */}
       <div className="flex items-center gap-3">
-        <span className="text-sm text-white hidden sm:inline">Avelino ▾</span>
+        <span className="text-sm text-white hidden sm:inline">
+          {userName} ▾
+        </span>
         <Avatar className="h-8 w-8 cursor-pointer">
-          <AvatarImage src="/avatar.png" alt="Avelino" />
-          <AvatarFallback className="bg-pink-500 text-white">A</AvatarFallback>
+          <AvatarImage src="/avatar.png" alt={userName} />
+          <AvatarFallback className="bg-pink-500 text-white">
+            {userName ? userName.charAt(0).toUpperCase() : "U"}
+          </AvatarFallback>
         </Avatar>
         <button
           onClick={logout}
