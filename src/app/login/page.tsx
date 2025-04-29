@@ -1,14 +1,20 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import Image from "next/image";
 import GoogleLoginButton from "../components/GoogleLoginButton";
 
+const customBG = {};
+
 export default function LoginPage() {
-  const [email, setEmail] = useState("admin@cyberlegal.ai");
-  const [password, setPassword] = useState("letmein");
+  // const [email, setEmail] = useState('');
+  // const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -26,87 +32,105 @@ export default function LoginPage() {
       }, 300);
       return () => clearTimeout(timer);
     }
-  }, [loginSuccess]);
+  }, [loginSuccess, router]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
 
     if (!email || !password) {
       setError("Email and password are required.");
       return;
     }
 
-    if (email === VALID_EMAIL && password === VALID_PASSWORD) {
-      setError("");
+    try {
       setIsLoggingIn(true);
+      const response = await fetch("http://127.0.0.1:8000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          username: email,
+          password: password,
+        }),
+      });
 
-      setTimeout(() => {
-        sessionStorage.setItem("cyberlegal-auth", "true");
-        Cookies.set("cyberlegal-auth", "true");
-        setLoginSuccess(true);
-        setIsLoggingIn(false);
-      }, 1500);
-    } else {
-      setError("Invalid credentials. Please try again.");
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.detail || "Login failed");
+      }
+
+      sessionStorage.setItem("cyberlegal-auth", "true");
+      sessionStorage.setItem("access_token", data.access_token);
+      setLoginSuccess(true);
+      setIsLoggingIn(false);
+    } catch (err: any) {
+      setIsLoggingIn(false);
+      setError(err.message);
     }
   };
 
   return (
-    <main className="min-h-screen flex text-white font-poppins relative">
-      {/* Left Side */}
-      <div className="w-1/2 hidden lg:flex items-center justify-center px-10 relative z-10">
-        <div className="max-w-md">
-          <h1 className="text-4xl font-semibold leading-snug">
-            Your <br />
-            <span className="text-white">Cybersecurity</span> <br />
-            <span className="text-pink-500">Assistant</span>
-          </h1>
+    <main className="min-h-screen flex text-white">
+      {/* Left side */}
+      <div
+        className="w-1/2 hidden md:flex items-center justify-center"
+        style={{
+          backgroundImage: "url('../../../loginbg.png')",
+          backgroundSize: "cover",
+          backgroundPositionY: "center",
+        }}
+      >
+        <div className="max-w-md text-start translate-x-[-35%] translate-y-[-80%]">
+          <div className="w-1/2 hidden lg:flex flex-col justify-center items-start px-20">
+            <h1 className="text-5xl mb-4 leading-tight tracking-wider font-poppins">
+              Your <br />
+              Cybersecurity <br />
+              <span className="text-pink-500">Assistant</span>
+            </h1>
+            {/* Optional: use an animated SVG or Lottie for those gradient lines */}
+          </div>
         </div>
       </div>
 
-      {/* Background Image */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        <Image
-          src="/login-bg.png"
-          alt="Background Graphic"
-          layout="fill"
-          objectFit="cover"
-          className="opacity-30 lg:opacity-100"
-        />
-      </div>
-
-      {/* Right Side */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center z-10 px-4 sm:px-6 md:px-10 py-12">
-        <div className="w-full max-w-2xl bg-[#1B2238] rounded-[36px] px-32 py-10">
-          <h2 className="text-center text-2xl font-bold mb-6 leading-snug">
-            <span className="text-white">Cyber</span>{" "}
-            <span className="text-pink-500">Legal</span>
+      {/* Right side */}
+      <div className="w-full lg:w-1/2 h-[100vh] flex items-center px-8 py-28">
+        <div className="bg-[#212E4A33] p-10 sm:p-20 md:p-28 rounded-3xl w-full max-w-2xl h-full login-bg content-center">
+          <h2 className="text-center text-3xl font-bold mb-6">
+            <span className="text-white">Cyber</span>
+            <span className="text-pink-500"> Legal</span>
           </h2>
 
-          <h3 className="text-sm font-semibold mb-6 text-white/80 text-center tracking-wide">
+          <h1 className="text-2xl font-semibold mb-6 text-white/80 tracking-wide">
             Sign In
-          </h3>
+          </h1>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <input
-              type="text"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Username"
-              className="w-full px-5 py-3 rounded-full bg-[#2A314B] border border-white/10 text-sm placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-500"
-            />
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <div className="relative">
+              <input
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-5 py-3 rounded-full bg-[#2A314B] border border-white/10 text-md placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-500 hover:scale-105 transition"
+                placeholder="you@example.com"
+              />
+            </div>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
+                id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                className="w-full px-5 py-3 rounded-full bg-[#2A314B] border border-white/10 text-sm placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-500 pr-10"
+                className="w-full px-5 py-3 rounded-full bg-[#2A314B] border border-white/10 text-md placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-500 hover:scale-105 transition"
+                placeholder="••••••••"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-[13px] text-white/50 hover:text-white"
+                className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 hover:text-pink-500"
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
@@ -114,8 +138,8 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              disabled={isLoggingIn}
-              className="w-full py-3 rounded-full bg-pink-500 text-white font-semibold text-sm transition hover:bg-pink-600 hover:scale-[1.02]"
+              className="w-full py-3  rounded-full bg-pink-500 text-white hover:bg-pink-600 hover:scale-105 transition"
+              disabled={isLoggingIn || loginSuccess}
             >
               {isLoggingIn ? (
                 <span className="flex items-center justify-center gap-2">
@@ -125,37 +149,42 @@ export default function LoginPage() {
                 "SIGN IN"
               )}
             </button>
+            {error && (
+              <p className="mt-3 text-xs text-red-500 font-medium text-center">
+                {error}
+              </p>
+            )}
+            <div className="m-4 flex items-center gap-4 text-white/50 text-sm">
+              <div className="flex-grow h-px bg-white/20"></div>
+              <span className="text-xs text-white/60">Or</span>
+              <div className="flex-grow h-px bg-white/20"></div>
+            </div>
+            <div className="w-full rounded-full overflow-hidden hover:scale-105 transition">
+              <GoogleLoginButton />
+            </div>
+            <span className="text-white/60 text-sm">
+              Don't you have an account? &nbsp;
+            </span>
+            <Link
+              href="/register"
+              className="text-white/60 text-sm hover:text-white transition cursor-pointer"
+            >
+              Sign up
+            </Link>
           </form>
-
-          <div className="mt-4 rounded-full overflow-hidden">
-            <GoogleLoginButton />
-          </div>
-
-          {error && (
-            <p className="mt-3 text-xs text-red-500 font-medium text-center">
-              {error}
-            </p>
-          )}
-
-          <div className="mt-4 text-left">
-            <p className="text-xs italic text-white/60 hover:text-white transition cursor-pointer">
-              Forgot password?
-            </p>
-          </div>
-
-          <div className="mt-8 flex justify-center gap-4 text-xs text-white/50">
-            <a href="#" className="hover:text-white transition">
-              Privacy
-            </a>
-            <span>|</span>
-            <a href="#" className="hover:text-white transition">
-              Terms
-            </a>
-            <span>|</span>
-            <a href="#" className="hover:text-white transition">
-              Contact
-            </a>
-          </div>
+        </div>
+        <div className="mt-8 flex justify-center gap-4 text-sm text-white/50 absolute bottom-12">
+          <a href="#" className="hover:text-white transition">
+            Privacy
+          </a>
+          <span>|</span>
+          <a href="#" className="hover:text-white transition">
+            Terms
+          </a>
+          <span>|</span>
+          <a href="#" className="hover:text-white transition">
+            Contact
+          </a>
         </div>
       </div>
     </main>
