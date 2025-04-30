@@ -234,7 +234,13 @@ export default function ChatbotPage() {
         setIsReferenceBoxExpanded(true); // Optional: auto-show ReferenceBox
 
         // Render only the titles in the message
-        const formattedTitles = allSources
+        const uniqueSources = Array.from(
+          new Map(
+            allSources.map((src) => [`${src.title}-${src.url || ""}`, src])
+          ).values()
+        );
+
+        const formattedTitles = uniqueSources
           .map((src) => `- ${src.title}`)
           .join("\n");
 
