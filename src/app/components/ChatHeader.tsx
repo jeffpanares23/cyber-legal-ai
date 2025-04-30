@@ -1,14 +1,8 @@
 "use client";
 
-/*
-  Enhanced ChatHeader Component
-  Design: Based on CyberLegal updated UI (April 2025)
-*/
-
 import { FC } from "react";
 import { Menu } from "lucide-react";
-import { logout } from "@/lib/auth";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"; // Optional - use shadcn/ui avatar
+import UserMenu from "../components/chat/UserMenu"; // ✅ import your new dropdown
 
 interface ChatHeaderProps {
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -31,24 +25,8 @@ const ChatHeader: FC<ChatHeaderProps> = ({ setSidebarOpen, userName }) => {
         </h1>
       </div>
 
-      {/* Right: Avatar and Dropdown */}
-      <div className="flex items-center gap-3">
-        <span className="text-sm text-white hidden sm:inline">
-          {userName} ▾
-        </span>
-        <Avatar className="h-8 w-8 cursor-pointer">
-          <AvatarImage src="/avatar.png" alt={userName} />
-          <AvatarFallback className="bg-pink-500 text-white">
-            {userName ? userName.charAt(0).toUpperCase() : "U"}
-          </AvatarFallback>
-        </Avatar>
-        <button
-          onClick={logout}
-          className="text-sm px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition hidden md:inline"
-        >
-          Logout
-        </button>
-      </div>
+      {/* Right: Profile Dropdown */}
+      <UserMenu userName={userName} />
     </header>
   );
 };
