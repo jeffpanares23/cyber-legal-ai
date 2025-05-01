@@ -19,22 +19,21 @@ const AiBubble: React.FC<AiBubbleProps> = ({ content, onReferenceClick }) => {
           <div className="font-semibold text-white">📚 Sources:</div>
           <ul className="list-disc list-inside space-y-1 text-indigo-400">
             {sources.map((src, idx) => {
-              const cleaned = src.replace(/^- /, "").trim(); // title only
+              const cleaned = src.replace(/^- /, "").trim();
+              const found = (window as any).latestSources?.find(
+                (item: any) => item.title === cleaned
+              );
+
+              const referenceText = found
+                ? `${found.title}\n\n${found.description}\n\n🔗 ${
+                    found.url || ""
+                  }`
+                : cleaned;
+
               return (
                 <li key={idx}>
                   <button
-                    onClick={() => {
-                      // Lookup the full source by title from latest sources in state
-                      const found = (window as any).latestSources?.find(
-                        (item: any) => item.title === cleaned
-                      );
-
-                      const referenceText = found
-                        ? `${found.title}\n\n${found.description}`
-                        : cleaned;
-
-                      onReferenceClick?.(referenceText);
-                    }}
+                    onClick={() => onReferenceClick?.(referenceText)}
                     className="hover:underline text-left text-indigo-400"
                   >
                     {cleaned}

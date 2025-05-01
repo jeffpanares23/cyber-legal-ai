@@ -14,4 +14,5 @@ export interface ChatSession {
 export type SourceItem = {
   title: string;
   description: string;
+  url?: string;
 };

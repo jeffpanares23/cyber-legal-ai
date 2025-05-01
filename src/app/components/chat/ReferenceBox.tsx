@@ -40,7 +40,27 @@ const ReferenceBox: React.FC<ReferenceBoxProps> = ({
             <X className="w-4 h-4 text-zinc-400 hover:text-zinc-100" />
           </button>
         </div>
-        <p className="whitespace-pre-wrap">{content}</p>
+        {/* <p className="whitespace-pre-wrap">{content}</p> */}
+        <div className="whitespace-pre-wrap space-y-2">
+          {content.split("\n\n").map((section, idx) => {
+            const isUrl = section.trim().startsWith("🔗");
+            const url = isUrl ? section.replace("🔗", "").trim() : null;
+
+            return isUrl ? (
+              <a
+                key={idx}
+                href={url!}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 hover:underline block"
+              >
+                🔗 View full source
+              </a>
+            ) : (
+              <p key={idx}>{section}</p>
+            );
+          })}
+        </div>
       </motion.div>
     );
   }
@@ -68,10 +88,29 @@ const ReferenceBox: React.FC<ReferenceBoxProps> = ({
           {sources.rules && sources.rules.length > 0 && (
             <>
               <h4 className="font-semibold mt-2">Rules and Regulations</h4>
-              <ul className="list-disc list-inside space-y-1">
+              {/* <ul className="list-disc list-inside space-y-1">
                 {sources.rules.map((item, index) => (
                   <li key={index}>
                     <strong>{item.title}</strong> – {item.description}
+                  </li>
+                ))}
+              </ul> */}
+              <ul className="list-disc list-inside space-y-1">
+                {Array.from(new Map(sources.rules.map(item => [item.title, item])).values()).map((item, index) => (
+                  <li key={index}>
+                    {item.url ? (
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 hover:underline font-semibold"
+                      >
+                        {item.title}
+                      </a>
+                    ) : (
+                      <strong>{item.title}</strong>
+                    )}{" "}
+                    – {item.description}
                   </li>
                 ))}
               </ul>
@@ -82,7 +121,7 @@ const ReferenceBox: React.FC<ReferenceBoxProps> = ({
             <>
               <h4 className="font-semibold mt-4">Cases</h4>
               <ul className="list-disc list-inside space-y-1">
-                {sources.cases.map((item, index) => (
+                {Array.from(new Map(sources.cases.map(item => [item.title, item])).values()).map((item, index) => (
                   <li key={index}>
                     <strong>{item.title}</strong> – {item.description}
                   </li>
