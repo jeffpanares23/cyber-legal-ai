@@ -6,6 +6,8 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast"; // ✅ Toast import
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import CookieConsentBanner from "@/components/ui/CookieConsentBanner";
+import ManagePreferencesModal from "@/components/ui/ManagePreferencesModal";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,6 +44,8 @@ export default function RootLayout({
           clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
         >
           {children}
+          <CookieConsentBanner />
+          <ManagePreferencesModal />
           <Toaster position="top-center" reverseOrder={false} />{" "}
           {/* ✅ Enables toast */}
         </GoogleOAuthProvider>

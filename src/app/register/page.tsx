@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import Link from "next/link";
-import GoogleLoginButton from "../components/GoogleLoginButton";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
@@ -129,17 +128,6 @@ export default function RegisterPage() {
                 {error}
               </p>
             )}
-
-            {/* <div className="m-4 flex items-center gap-4 text-white/50 text-sm">
-              <div className="flex-grow h-px bg-white/20"></div>
-              <span className="text-xs text-white/60">Or</span>
-              <div className="flex-grow h-px bg-white/20"></div>
-            </div>
-
-            <div className="w-full rounded-full overflow-hidden hover:scale-105 transition">
-              <GoogleLoginButton />
-            </div> */}
-
             <span className="text-white/60 text-sm">
               Already have an account? &nbsp;
             </span>
