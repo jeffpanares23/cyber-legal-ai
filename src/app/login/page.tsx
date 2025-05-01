@@ -100,14 +100,18 @@ export default function LoginPage() {
       </div>
 
       {/* Right side */}
-      <div className="w-full lg:w-1/2 h-[100vh] flex items-center px-8 py-28">
+      <div className="w-full lg:w-1/2 h-[100vh] flex items-center px-8 py-28 max-h">
         <div className="bg-[#212E4A33] p-10 sm:p-20 md:p-28 rounded-3xl w-full max-w-2xl h-full login-bg content-center">
-          <h2 className="text-center text-3xl font-bold mb-6">
+          {/* <h2 className="text-center text-3xl font-bold mb-6">
             <span className="text-white">Cyber</span>
             <span className="text-pink-500"> Legal</span>
-          </h2>
-
-          <h1 className="text-2xl font-semibold mb-6 text-white/80 tracking-wide">
+          </h2> */}
+          <img
+            src="../../../Logo_Cyberlegal_light.svg" // Update with actual file name or path
+            alt="Cyberlegal AI Logo"
+            className="mx-auto mb-10 h-40 w-auto sm:h-20 md:h-20"
+          />
+          <h1 className="text-2xl font-semibold mb-6 text-white/80 tracking-wide text-center">
             Sign In
           </h1>
 
