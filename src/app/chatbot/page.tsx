@@ -17,6 +17,7 @@ import useIsMobile from "../hooks/useIsMobile";
 import { ChatMessage, ChatSession, SourceItem } from "@/types/ChatTypes";
 import { saveChatSessions, loadChatSessions } from "@/utils/chatStorage";
 import { useAutoScroll } from "../hooks/useAutoScroll";
+import { BASE_URL } from "../../config";
 
 function generateSmartTitle(input: string): string {
   const trimmed = input.trim().toLowerCase();
@@ -138,8 +139,7 @@ export default function ChatbotPage() {
   //     content: input.trim(),
   //     role: "",
   //   };
-  //   const updatedMessages = [...messages, userMessage];
-  //   setMessages(updatedMessages);
+
   //   setInput("");
   //   setIsTyping(true);
 
@@ -157,23 +157,52 @@ export default function ChatbotPage() {
   //     });
 
   //     const data = await res.json();
+  //     console.log("📚 Received sources:", data.sources);
   //     const botReply: ChatMessage = {
   //       sender: "bot",
   //       content: data.response,
   //       role: "",
   //     };
-  //     const fullChat = [...updatedMessages, botReply];
-  //     if (data.sources && data.sources.length > 0) {
-  //       const formattedSources = data.sources
-  //         .map((src: string) => `- ${src}`)
+
+  //     const fullChat: ChatMessage[] = [...messages, userMessage, botReply];
+
+  //     // Add sources if present
+  //     // if (data.sources) {
+  //     //   console.log("✅ SETTING SOURCES:", data.sources);
+  //     //   setSources(data.sources);
+  //     //   setIsReferenceBoxExpanded(true);
+  //     // }
+  //     if (
+  //       data.sources &&
+  //       (data.sources.rules?.length > 0 || data.sources.cases?.length > 0)
+  //     ) {
+  //       const allSources = [
+  //         ...(data.sources.rules || []),
+  //         ...(data.sources.cases || []),
+  //       ];
+  //       (window as any).latestSources = allSources;
+  //       // Save to state for ReferenceBox
+  //       setSources(data.sources);
+  //       setIsReferenceBoxExpanded(true); // Optional: auto-show ReferenceBox
+
+  //       // Render only the titles in the message
+  //       const uniqueSources = Array.from(
+  //         new Map(
+  //           allSources.map((src) => [`${src.title}-${src.url || ""}`, src])
+  //         ).values()
+  //       );
+
+  //       const formattedTitles = uniqueSources
+  //         .map((src) => `- ${src.title}`)
   //         .join("\n");
-  //       const sourceReply: ChatMessage = {
+
+  //       fullChat.push({
   //         sender: "bot",
-  //         content: `📚 **Sources:**\n${formattedSources}`,
+  //         content: `📚 **Sources:**\n${formattedTitles}`,
   //         role: "",
-  //       };
-  //       fullChat.push(sourceReply);
+  //       });
   //     }
+
   //     setMessages(fullChat);
   //     persistSession(fullChat, generateSmartTitle(userMessage.content));
   //     setTitle(generateSmartTitle(userMessage.content));
@@ -198,70 +227,83 @@ export default function ChatbotPage() {
     setIsTyping(true);
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/rag/query", {
+      const fullChat = [...messages, userMessage];
+
+      // Step 1: PromptEnhancerAgent
+      // Step 1: Run SufficientInfoAgent on the original user input
+      const intakeRes = await fetch(`${BASE_URL}/agents/sufficient-info`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          query: userMessage.content,
-          metadata: {
-            source: "chat",
-            time: new Date().toISOString(),
-          },
-        }),
+        body: JSON.stringify({ query: userMessage.content }),
       });
+      const intake = await intakeRes.json();
 
-      const data = await res.json();
-      console.log("📚 Received sources:", data.sources);
+      // Step 2: Check if intake is incomplete
+      if (
+        intake.response.includes("please clarify") ||
+        intake.response.includes("Could you")
+      ) {
+        fullChat.push({ sender: "bot", content: intake.response, role: "" });
+        setMessages(fullChat);
+        setIsTyping(false);
+        return;
+      }
+
+      // Step 3: Then enhance the normalized query
+      const enhancerRes = await fetch(`${BASE_URL}/agents/prompt-enhancer`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ normalized_query: intake.response }), // ✅ intake.response is normalized
+      });
+      const enhancer = await enhancerRes.json();
+
+      // Step 3: ResearchAgent
+      const researchRes = await fetch(`${BASE_URL}/agents/research`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ enhanced_query: enhancer.response }),
+      });
+      const research = await researchRes.json();
+
+      // Step 4: WriteAgent
+      const writeRes = await fetch(`${BASE_URL}/agents/write`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ research_notes: research.response }),
+      });
+      const write = await writeRes.json();
+
+      // Step 5: ReviewAgent
+      const reviewRes = await fetch(`${BASE_URL}/agents/review`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ initial_report: write.response }),
+      });
+      const review = await reviewRes.json();
+
+      // Step 6: JudgeAgent
+      const judgeRes = await fetch(`${BASE_URL}/agents/judge`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reviewed_report: review.response }),
+      });
+      const judge = await judgeRes.json();
+
       const botReply: ChatMessage = {
         sender: "bot",
-        content: data.response,
+        content:
+          judge.response ||
+          judge.neutral_opinion ||
+          "✅ Legal review complete.",
         role: "",
       };
 
-      const fullChat: ChatMessage[] = [...messages, userMessage, botReply];
-
-      // Add sources if present
-      // if (data.sources) {
-      //   console.log("✅ SETTING SOURCES:", data.sources);
-      //   setSources(data.sources);
-      //   setIsReferenceBoxExpanded(true);
-      // }
-      if (
-        data.sources &&
-        (data.sources.rules?.length > 0 || data.sources.cases?.length > 0)
-      ) {
-        const allSources = [
-          ...(data.sources.rules || []),
-          ...(data.sources.cases || []),
-        ];
-        (window as any).latestSources = allSources;
-        // Save to state for ReferenceBox
-        setSources(data.sources);
-        setIsReferenceBoxExpanded(true); // Optional: auto-show ReferenceBox
-
-        // Render only the titles in the message
-        const uniqueSources = Array.from(
-          new Map(
-            allSources.map((src) => [`${src.title}-${src.url || ""}`, src])
-          ).values()
-        );
-
-        const formattedTitles = uniqueSources
-          .map((src) => `- ${src.title}`)
-          .join("\n");
-
-        fullChat.push({
-          sender: "bot",
-          content: `📚 **Sources:**\n${formattedTitles}`,
-          role: "",
-        });
-      }
-
+      fullChat.push(botReply);
       setMessages(fullChat);
       persistSession(fullChat, generateSmartTitle(userMessage.content));
       setTitle(generateSmartTitle(userMessage.content));
     } catch (err) {
-      console.error("Backend error:", err);
+      console.error("Agent pipeline error:", err);
     } finally {
       setIsTyping(false);
     }
