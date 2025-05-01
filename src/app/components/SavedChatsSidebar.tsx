@@ -90,7 +90,9 @@ export default function SavedChatsSidebar({
               />
             ) : (
               <>
-                <div className="font-medium text-md truncate pr-6">{session.title}</div>
+                <div className="font-medium text-md truncate pr-6">
+                  {session.title}
+                </div>
                 <div className="text-xs mt-1">
                   {new Date(session.createdAt).toLocaleDateString("en-US", {
                     year: "numeric",
@@ -109,9 +111,12 @@ export default function SavedChatsSidebar({
                 );
               }}
             >
-              <MoreHorizontal size={18} className="text-zinc-400 hover:text-white" />
+              <MoreHorizontal
+                size={18}
+                className="text-zinc-400 hover:text-white"
+              />
               {dropdownOpenId === session.id && (
-                <div className="absolute right-0 mt-1 w-32 bg-zinc-900 border border-zinc-700 rounded shadow-lg z-50">
+                <div className="absolute right-0 mt-1 w-32 border rounded shadow-lg z-50">
                   <button
                     className="block w-full text-left px-3 py-2 text-sm hover:bg-zinc-800"
                     onClick={() => {

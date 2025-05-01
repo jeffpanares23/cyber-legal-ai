@@ -39,6 +39,7 @@ function generateSmartTitle(input: string): string {
 export default function ChatbotPage() {
   const router = useRouter();
   const isMobile = useIsMobile(); // ✅ Mobile detection
+  const [userName, setUserName] = useState<string>("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [title, setTitle] = useState<string>("");
   const [input, setInput] = useState("");
@@ -89,8 +90,13 @@ export default function ChatbotPage() {
     const isLoggedIn =
       sessionStorage.getItem("cyberlegal-auth") ||
       Cookies.get("cyberlegal-auth");
-    if (!isLoggedIn) router.push("/login");
-    else setAuthChecked(true);
+    if (!isLoggedIn) {
+      router.push("/login");
+    } else {
+      const storedName = sessionStorage.getItem("user_name") || "User";
+      setUserName(storedName);
+      setAuthChecked(true);
+    }
   }, [router]);
 
   // useEffect(() => {
@@ -271,7 +277,7 @@ export default function ChatbotPage() {
   if (!authChecked) return null;
 
   return (
-    <div className="flex h-screen overflow-hidden bg-zinc-900 text-white">
+    <div className="flex h-screen overflow-hidden text-white">
       <ChatSidebar
         sidebarOpen={sidebarOpen && !isReferenceExpanded}
         setSidebarOpen={setSidebarOpen}
@@ -282,7 +288,7 @@ export default function ChatbotPage() {
         onNewChatClick={() => setShowNewChatModal(true)}
       />
       <main className="flex flex-col flex-1">
-        <ChatHeader setSidebarOpen={setSidebarOpen} />
+        <ChatHeader setSidebarOpen={setSidebarOpen} userName={userName} />
         <div className="flex-1 overflow-y-auto px-6 py-4">
           {messages.length === 0 && !isTyping ? (
             <div className="max-w-5xl mx-auto">
