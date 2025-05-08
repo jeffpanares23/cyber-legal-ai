@@ -54,6 +54,10 @@ export default function ChatbotPage() {
   const [selectedReference, setSelectedReference] = useState<string | null>(
     null
   );
+  const [postJudgeChoice, setPostJudgeChoice] = useState<
+    "prosecution" | "defense" | "validate" | null
+  >(null);
+
   const [refBoxExpanded, setRefBoxExpanded] = useState(false);
   const [sources, setSources] = useState<{
     rules?: SourceItem[];
@@ -300,6 +304,7 @@ export default function ChatbotPage() {
 
       fullChat.push(botReply);
       setMessages(fullChat);
+      setPostJudgeChoice("prosecution");
       persistSession(fullChat, generateSmartTitle(userMessage.content));
       setTitle(generateSmartTitle(userMessage.content));
     } catch (err) {
@@ -358,6 +363,80 @@ export default function ChatbotPage() {
                   chatRef={chatRef}
                   setSelectedReference={setSelectedReference}
                 />
+                {postJudgeChoice && (
+                  <div className="flex gap-4 mt-4 px-6">
+                    <button
+                      onClick={async () => {
+                        const res = await fetch(
+                          `${BASE_URL}/agents/prosecution`,
+                          {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                              reviewed_report:
+                                messages[messages.length - 1].content,
+                            }),
+                          }
+                        );
+                        const data = await res.json();
+                        setMessages((prev) => [
+                          ...prev,
+                          { sender: "bot", content: data.response, role: "" },
+                        ]);
+                        setPostJudgeChoice("defense"); // chain or null
+                      }}
+                      className="bg-red-600 text-white px-4 py-2 rounded"
+                    >
+                      🔴 Prosecution
+                    </button>
+                    <button
+                      onClick={async () => {
+                        const res = await fetch(`${BASE_URL}/agents/defense`, {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({
+                            prosecution_brief:
+                              messages[messages.length - 1].content,
+                          }),
+                        });
+                        const data = await res.json();
+                        setMessages((prev) => [
+                          ...prev,
+                          { sender: "bot", content: data.response, role: "" },
+                        ]);
+                        setPostJudgeChoice("validate"); // chain or null
+                      }}
+                      className="bg-blue-600 text-white px-4 py-2 rounded"
+                    >
+                      🔵 Defense
+                    </button>
+                    <button
+                      onClick={async () => {
+                        const res = await fetch(`${BASE_URL}/agents/validate`, {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({
+                            final_document:
+                              messages[messages.length - 1].content,
+                            metadata: {
+                              source: "chat",
+                              time: new Date().toISOString(),
+                            },
+                          }),
+                        });
+                        const data = await res.json();
+                        setMessages((prev) => [
+                          ...prev,
+                          { sender: "bot", content: data.response, role: "" },
+                        ]);
+                        setPostJudgeChoice(null);
+                      }}
+                      className="bg-green-600 text-white px-4 py-2 rounded"
+                    >
+                      ✅ Validate
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* 📚 Reference Box */}
