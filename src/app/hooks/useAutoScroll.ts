@@ -1,7 +1,8 @@
 // File: src/hooks/useAutoScroll.ts
 import { useEffect, useRef, useState } from "react";
+import type { ChatMessage } from "@/types/ChatTypes" // ✅ adjust path as needed
 
-export function useAutoScroll(messages: any[], isTyping: boolean) {
+export function useAutoScroll(messages: ChatMessage[], isTyping: boolean) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [showScrollButton, setShowScrollButton] = useState(false);
   const userScrolledUpRef = useRef(false); // ✅ track if user scrolls up

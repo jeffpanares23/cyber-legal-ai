@@ -3,6 +3,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image"
+import { BASE_URL } from "@/config";
+
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
@@ -20,7 +23,7 @@ export default function RegisterPage() {
 
     try {
       setIsRegistering(true);
-      const res = await fetch("http://localhost:8000/api/register", {
+      const res = await fetch(`${BASE_URL}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, name }),
@@ -32,8 +35,9 @@ export default function RegisterPage() {
       }
 
       router.push("/login");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Unknown error"
+      setError(message)
     } finally {
       setIsRegistering(false);
     }
@@ -64,9 +68,11 @@ export default function RegisterPage() {
       {/* Right side form */}
       <div className="w-full lg:w-1/2 h-[100vh] flex items-center px-8 py-28">
         <div className="bg-[#212E4A33] p-10 sm:p-20 md:p-28 rounded-3xl w-full max-w-2xl h-full login-bg content-center">
-          <img
+          <Image
             src="../../../Logo_Cyberlegal_light.svg"
             alt="Cyberlegal AI Logo"
+            width={160}
+            height={60}
             className="mx-auto mb-10 h-40 w-auto sm:h-20 md:h-20"
           />
 

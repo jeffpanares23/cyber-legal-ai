@@ -6,12 +6,19 @@ interface AiBubbleProps {
   onReferenceClick?: (source: string) => void; // ✅ optional prop
 }
 
+interface SourceItem {
+  title: string
+  description?: string
+  url?: string
+}
+
 const AiBubble: React.FC<AiBubbleProps> = ({ content, onReferenceClick }) => {
   const isSourceBlock = content.includes("**Sources:**");
 
   if (isSourceBlock) {
     const lines = content.split("\n").filter(Boolean);
     const sources = lines.slice(1); // skip the "**Sources:**" line
+    const latestSources = (window as unknown as { latestSources?: SourceItem[] }).latestSources
 
     return (
       <div className="flex justify-start mb-4 px-4">
@@ -20,9 +27,7 @@ const AiBubble: React.FC<AiBubbleProps> = ({ content, onReferenceClick }) => {
           <ul className="list-disc list-inside space-y-1 text-indigo-400">
             {sources.map((src, idx) => {
               const cleaned = src.replace(/^- /, "").trim();
-              const found = (window as any).latestSources?.find(
-                (item: any) => item.title === cleaned
-              );
+              const found = latestSources?.find((item) => item.title === cleaned)
 
               const referenceText = found
                 ? `${found.title}\n\n${found.description}\n\n🔗 ${

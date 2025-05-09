@@ -3,14 +3,13 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image"
+import { BASE_URL } from "@/config";
 import GoogleLoginButton from "../components/GoogleLoginButton";
 import { useRouter } from "next/navigation";
-import LottiePlayer from "../components/LottieClientOnly";
 import Cookies from "js-cookie";
 
 Cookies.set("cyberlegal-auth", "true");
-
-const customBG = {};
 
 export default function LoginPage() {
   // const [email, setEmail] = useState('');
@@ -46,7 +45,7 @@ export default function LoginPage() {
 
     try {
       setIsLoggingIn(true);
-      const response = await fetch("http://127.0.0.1:8000/api/auth/login", {
+      const response = await fetch(`${BASE_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -70,9 +69,10 @@ export default function LoginPage() {
       sessionStorage.setItem("user_name", data.name);
       setLoginSuccess(true);
       setIsLoggingIn(false);
-    } catch (err: any) {
-      setIsLoggingIn(false);
-      setError(err.message);
+    } catch (err: unknown) {
+      const errorMsg = err instanceof Error ? err.message : "An error occurred"
+      setIsLoggingIn(false)
+      setError(errorMsg)
     }
   };
 
@@ -106,9 +106,11 @@ export default function LoginPage() {
             <span className="text-white">Cyber</span>
             <span className="text-pink-500"> Legal</span>
           </h2> */}
-          <img
-            src="../../../Logo_Cyberlegal_light.svg" // Update with actual file name or path
+          <Image
+            src="../../../Logo_Cyberlegal_light.svg"
             alt="Cyberlegal AI Logo"
+            width={160}
+            height={60}
             className="mx-auto mb-10 h-40 w-auto sm:h-20 md:h-20"
           />
           <h1 className="text-2xl font-semibold mb-6 text-white/80 tracking-wide text-center">
@@ -171,7 +173,7 @@ export default function LoginPage() {
               <GoogleLoginButton />
             </div>
             <span className="text-white/60 text-sm">
-              Don't you have an account? &nbsp;
+              Don&apos;t you have an account? &nbsp;
             </span>
             <Link
               href="/register"

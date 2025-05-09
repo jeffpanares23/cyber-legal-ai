@@ -1,16 +1,17 @@
 // src/components/GoogleLoginButton.tsx
 "use client";
 
-import { GoogleLogin } from "@react-oauth/google";
+import { GoogleLogin, CredentialResponse  } from "@react-oauth/google";
 import { useRouter } from "next/navigation";
+import { BASE_URL } from "@/config";
 import toast from "react-hot-toast";
 
 export default function GoogleLoginButton() {
   const router = useRouter();
 
-  const handleSuccess = async (credentialResponse: any) => {
+  const handleSuccess = async (credentialResponse: CredentialResponse ) => {
     try {
-      const res = await fetch("http://localhost:8000/api/auth/google", {
+      const res = await fetch(`${BASE_URL}/auth/google`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: credentialResponse.credential }),

@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 
@@ -13,7 +13,6 @@ import ChatHeader from "../components/ChatHeader";
 import ChatMessageList from "../components/chat/ChatMessageList";
 import NewChatConfirmModal from "../components/NewChatConfirmModal";
 import ReferenceBox from "../components/chat/ReferenceBox";
-import useIsMobile from "../hooks/useIsMobile";
 import { ChatMessage, ChatSession, SourceItem } from "@/types/ChatTypes";
 import { saveChatSessions, loadChatSessions } from "@/utils/chatStorage";
 import { useAutoScroll } from "../hooks/useAutoScroll";
@@ -39,7 +38,6 @@ function generateSmartTitle(input: string): string {
 
 export default function ChatbotPage() {
   const router = useRouter();
-  const isMobile = useIsMobile(); // ✅ Mobile detection
   const [userName, setUserName] = useState<string>("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [title, setTitle] = useState<string>("");
@@ -49,21 +47,20 @@ export default function ChatbotPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
-  const [isReferenceExpanded, setIsReferenceExpanded] = useState(false);
+  const [isReferenceExpanded] = useState(false);
   const [isReferenceBoxExpanded, setIsReferenceBoxExpanded] = useState(false);
   const [selectedReference, setSelectedReference] = useState<string | null>(
     null
   );
-  const [refBoxExpanded, setRefBoxExpanded] = useState(false);
-  const [sources, setSources] = useState<{
+  const [sources] = useState<{
     rules?: SourceItem[];
     cases?: SourceItem[];
   } | null>(null);
 
-  const handleReferenceClick = (ref: string) => {
-    setSelectedReference(ref);
-    setIsReferenceBoxExpanded(true);
-  };
+  // const handleReferenceClick = (ref: string) => {
+  //   setSelectedReference(ref);
+  //   setIsReferenceBoxExpanded(true);
+  // };
 
   // const chatRef = useRef<HTMLDivElement>(null);
   // const chatRef = useAutoScroll(messages, isTyping);
@@ -75,7 +72,7 @@ export default function ChatbotPage() {
 
   const [showNewChatModal, setShowNewChatModal] = useState(false);
 
-  const hasAiResponse = messages.some((msg) => msg.sender === "bot");
+  // const hasAiResponse = messages.some((msg) => msg.sender === "bot");
 
   const handleNewChatConfirm = () => {
     setMessages([]);
