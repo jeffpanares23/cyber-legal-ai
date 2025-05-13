@@ -215,7 +215,11 @@ export default function ChatbotPage() {
   //   }
   // };
 
-  const handleSend = async (e: React.FormEvent) => {
+  const handleSend = async (
+    e: React.FormEvent,
+    role: string = "neutral",
+    tone: string = "neutral"
+  ) => {
     e.preventDefault();
     if (!input.trim()) return;
 
@@ -236,7 +240,12 @@ export default function ChatbotPage() {
       const intakeRes = await fetch(`${BASE_URL}/agents/sufficient-info`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: userMessage.content }),
+        // body: JSON.stringify({ query: userMessage.content }),
+        body: JSON.stringify({
+          query: userMessage.content,
+          role,
+          tone,
+        }),
       });
       const intake = await intakeRes.json();
 
@@ -345,7 +354,7 @@ export default function ChatbotPage() {
               />
             </div>
           ) : (
-            <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-6 transition-all duration-300">
+            <div className="max-w-5xl mx-auto flex flex-col lg:flex-row gap-6 transition-all duration-300">
               {/* 💬 Chat Area */}
               <div
                 className={`flex-1 w-full transition-all duration-300 ${

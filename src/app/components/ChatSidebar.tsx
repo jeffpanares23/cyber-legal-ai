@@ -28,7 +28,7 @@ const ChatSidebar: FC<ChatSidebarProps> = ({
   return (
     <>
       <aside
-        className={`overflow-auto fixed md:static z-30 top-0 left-0 h-full w-64 px-4 transform transition-transform duration-200 ease-in-out ${
+        className={`overflow-auto fixed md:static z-30 top-0 left-0 h-full w-80 px-4 transform transition-transform duration-200 ease-in-out ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         }`}
       >
