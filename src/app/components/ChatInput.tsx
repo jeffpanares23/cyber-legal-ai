@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import RoleToneControls from "./chat/RoleToneControls";
 

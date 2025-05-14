@@ -234,6 +234,15 @@ export default function ChatbotPage() {
 
     try {
       const fullChat = [...messages, userMessage];
+      const lastBotMsg = messages
+        .slice()
+        .reverse()
+        .find((msg) => msg.sender === "bot");
+      const isPreviousFallback =
+        lastBotMsg?.content?.toLowerCase().includes("insufficient evidence") ||
+        lastBotMsg?.content
+          ?.toLowerCase()
+          .includes("please provide specific legal details");
 
       // Step 1: PromptEnhancerAgent
       // Step 1: Run SufficientInfoAgent on the original user input
@@ -242,7 +251,11 @@ export default function ChatbotPage() {
         headers: { "Content-Type": "application/json" },
         // body: JSON.stringify({ query: userMessage.content }),
         body: JSON.stringify({
-          query: userMessage.content,
+          query: isPreviousFallback
+            ? `${lastBotMsg?.content || ""}\n\nFollow-up: ${
+                userMessage.content
+              }`
+            : userMessage.content,
           role,
           tone,
         }),
@@ -250,11 +263,36 @@ export default function ChatbotPage() {
       const intake = await intakeRes.json();
 
       // Step 2: Check if intake is incomplete
+      // if (
+      //   intake.response.includes("please clarify") ||
+      //   intake.response.includes("Could you")
+      // ) {
+      //   fullChat.push({ sender: "bot", content: intake.response, role: "" });
+      //   setMessages(fullChat);
+      //   setIsTyping(false);
+      //   return;
+      // }
       if (
-        intake.response.includes("please clarify") ||
-        intake.response.includes("Could you")
+        intake.response.toLowerCase().includes("please clarify") ||
+        intake.response.toLowerCase().includes("could you")
       ) {
-        fullChat.push({ sender: "bot", content: intake.response, role: "" });
+        // Avoid duplicate fallback message
+        if (intake.response !== fullChat[fullChat.length - 1]?.content) {
+          fullChat.push({ sender: "bot", content: intake.response, role: "" });
+        }
+
+        // Optional Step: Display preset suggestion buttons
+        fullChat.push({
+          sender: "bot",
+          content:
+            "Here are some ways you might clarify your question:\n\n" +
+            "- I was accused of cyber libel for posting a private message online.\n" +
+            "- They claim I defamed someone through Facebook comments.\n" +
+            "- The message involved a public figure.\n\n" +
+            "You can click on one of these or rephrase your query.",
+          role: "",
+        });
+
         setMessages(fullChat);
         setIsTyping(false);
         return;
@@ -277,10 +315,22 @@ export default function ChatbotPage() {
       const research = await researchRes.json();
 
       // Step 4: WriteAgent
+      let facts = "";
+      try {
+        const parsed = JSON.parse(intake.response);
+        facts = parsed.key_facts || "";
+      } catch {
+        console.warn("⚠️ Failed to parse intake response as JSON.");
+      }
+
+      // Step 4: WriteAgent
       const writeRes = await fetch(`${BASE_URL}/agents/write`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ research_notes: research.response }),
+        body: JSON.stringify({
+          research_notes: research.response,
+          facts,
+        }),
       });
       const write = await writeRes.json();
 
