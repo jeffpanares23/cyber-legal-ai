@@ -214,12 +214,7 @@ export default function ChatbotPage() {
   //     setIsTyping(false);
   //   }
   // };
-
-  const handleSend = async (
-    e: React.FormEvent,
-    role: string = "neutral",
-    tone: string = "neutral"
-  ) => {
+  const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
 
@@ -234,142 +229,232 @@ export default function ChatbotPage() {
 
     try {
       const fullChat = [...messages, userMessage];
-      const lastBotMsg = messages
-        .slice()
-        .reverse()
-        .find((msg) => msg.sender === "bot");
-      const isPreviousFallback =
-        lastBotMsg?.content?.toLowerCase().includes("insufficient evidence") ||
-        lastBotMsg?.content
-          ?.toLowerCase()
-          .includes("please provide specific legal details");
 
-      // Step 1: PromptEnhancerAgent
-      // Step 1: Run SufficientInfoAgent on the original user input
-      const intakeRes = await fetch(`${BASE_URL}/agents/sufficient-info`, {
+      const response = await fetch(`${BASE_URL}/agents/multi-agent`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        // body: JSON.stringify({ query: userMessage.content }),
         body: JSON.stringify({
-          query: isPreviousFallback
-            ? `${lastBotMsg?.content || ""}\n\nFollow-up: ${
-                userMessage.content
-              }`
-            : userMessage.content,
-          role,
-          tone,
+          query: userMessage.content,
+          history: messages.map((m) => ({
+            sender: m.sender,
+            content: m.content,
+          })),
+          metadata: {
+            source: "chat",
+            time: new Date().toISOString(),
+          },
         }),
       });
-      const intake = await intakeRes.json();
 
-      // Step 2: Check if intake is incomplete
-      // if (
-      //   intake.response.includes("please clarify") ||
-      //   intake.response.includes("Could you")
-      // ) {
-      //   fullChat.push({ sender: "bot", content: intake.response, role: "" });
-      //   setMessages(fullChat);
-      //   setIsTyping(false);
-      //   return;
-      // }
-      if (
-        intake.response.toLowerCase().includes("please clarify") ||
-        intake.response.toLowerCase().includes("could you")
-      ) {
-        // Avoid duplicate fallback message
-        if (intake.response !== fullChat[fullChat.length - 1]?.content) {
-          fullChat.push({ sender: "bot", content: intake.response, role: "" });
-        }
+      const result = await response.json();
 
-        // Optional Step: Display preset suggestion buttons
+      // If intake was incomplete
+      if (result.status !== "success") {
+        const fallbackMsg =
+          result.response || result.message || "Unknown error.";
         fullChat.push({
           sender: "bot",
-          content:
-            "Here are some ways you might clarify your question:\n\n" +
-            "- I was accused of cyber libel for posting a private message online.\n" +
-            "- They claim I defamed someone through Facebook comments.\n" +
-            "- The message involved a public figure.\n\n" +
-            "You can click on one of these or rephrase your query.",
+          content: fallbackMsg,
           role: "",
         });
-
         setMessages(fullChat);
         setIsTyping(false);
         return;
       }
 
-      // Step 3: Then enhance the normalized query
-      const enhancerRes = await fetch(`${BASE_URL}/agents/prompt-enhancer`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ normalized_query: intake.response }), // ✅ intake.response is normalized
-      });
-      const enhancer = await enhancerRes.json();
+      // ✅ Display each agent's output step-by-step
+      const agentResponses: { label: string; content: string }[] = [
+        { label: "📥 Intake", content: JSON.stringify(result.intake, null, 2) },
+        { label: "🧠 Enhanced Query", content: result.enhanced_query },
+        { label: "📚 Research Notes", content: result.research_notes },
+        { label: "✍️ Legal Memo", content: result.memo },
+        { label: "🔍 Reviewed Report", content: result.reviewed_report },
+        { label: "⚖️ Judgment", content: result.judgment },
+      ];
 
-      // Step 3: ResearchAgent
-      const researchRes = await fetch(`${BASE_URL}/agents/research`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ enhanced_query: enhancer.response }),
-      });
-      const research = await researchRes.json();
-
-      // Step 4: WriteAgent
-      let facts = "";
-      try {
-        const parsed = JSON.parse(intake.response);
-        facts = parsed.key_facts || "";
-      } catch {
-        console.warn("⚠️ Failed to parse intake response as JSON.");
+      for (const step of agentResponses) {
+        fullChat.push({
+          sender: "bot",
+          content: `### ${step.label}\n${step.content}`,
+          role: "",
+        });
       }
 
-      // Step 4: WriteAgent
-      const writeRes = await fetch(`${BASE_URL}/agents/write`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          research_notes: research.response,
-          facts,
-        }),
-      });
-      const write = await writeRes.json();
-
-      // Step 5: ReviewAgent
-      const reviewRes = await fetch(`${BASE_URL}/agents/review`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ initial_report: write.response }),
-      });
-      const review = await reviewRes.json();
-
-      // Step 6: JudgeAgent
-      const judgeRes = await fetch(`${BASE_URL}/agents/judge`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reviewed_report: review.response }),
-      });
-      const judge = await judgeRes.json();
-
-      const botReply: ChatMessage = {
-        sender: "bot",
-        content:
-          judge.response ||
-          judge.neutral_opinion ||
-          "✅ Legal review complete.",
-        role: "",
-      };
-
-      fullChat.push(botReply);
       setMessages(fullChat);
-      setPostJudgeChoice("prosecution");
       persistSession(fullChat, generateSmartTitle(userMessage.content));
       setTitle(generateSmartTitle(userMessage.content));
+      setPostJudgeChoice("prosecution"); // Enable prosecution/defense buttons
     } catch (err) {
-      console.error("Agent pipeline error:", err);
+      console.error("Multi-agent pipeline error:", err);
+      setMessages([
+        ...messages,
+        userMessage,
+        {
+          sender: "bot",
+          content: "❌ Something went wrong. Please try again.",
+          role: "",
+        },
+      ]);
     } finally {
       setIsTyping(false);
     }
   };
+
+  // const handleSend = async (
+  //   e: React.FormEvent,
+  //   role: string = "neutral",
+  //   tone: string = "neutral"
+  // ) => {
+  //   e.preventDefault();
+  //   if (!input.trim()) return;
+
+  //   const userMessage: ChatMessage = {
+  //     sender: "user",
+  //     content: input.trim(),
+  //     role: "",
+  //   };
+
+  //   setInput("");
+  //   setIsTyping(true);
+
+  //   try {
+  //     const fullChat = [...messages, userMessage];
+  //     const lastBotMsg = messages
+  //       .slice()
+  //       .reverse()
+  //       .find((msg) => msg.sender === "bot");
+  //     const isPreviousFallback =
+  //       lastBotMsg?.content?.toLowerCase().includes("insufficient evidence") ||
+  //       lastBotMsg?.content
+  //         ?.toLowerCase()
+  //         .includes("please provide specific legal details");
+
+  //     // Step 1: PromptEnhancerAgent
+  //     // Step 1: Run SufficientInfoAgent on the original user input
+  //     const intakeRes = await fetch(`${BASE_URL}/agents/sufficient-info`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       // body: JSON.stringify({ query: userMessage.content }),
+  //       body: JSON.stringify({
+  //         query: isPreviousFallback
+  //           ? `${lastBotMsg?.content || ""}\n\nFollow-up: ${
+  //               userMessage.content
+  //             }`
+  //           : userMessage.content,
+  //         role,
+  //         tone,
+  //       }),
+  //     });
+  //     const intake = await intakeRes.json();
+
+  //     // Step 2: Check if intake is incomplete
+  //     // if (
+  //     //   intake.response.includes("please clarify") ||
+  //     //   intake.response.includes("Could you")
+  //     // ) {
+  //     //   fullChat.push({ sender: "bot", content: intake.response, role: "" });
+  //     //   setMessages(fullChat);
+  //     //   setIsTyping(false);
+  //     //   return;
+  //     // }
+  //     if (
+  //       intake.response.toLowerCase().includes("please clarify") ||
+  //       intake.response.toLowerCase().includes("could you")
+  //     ) {
+  //       // Avoid duplicate fallback message
+  //       if (intake.response !== fullChat[fullChat.length - 1]?.content) {
+  //         fullChat.push({ sender: "bot", content: intake.response, role: "" });
+  //       }
+
+  //       // Optional Step: Display preset suggestion buttons
+  //       fullChat.push({
+  //         sender: "bot",
+  //         content:
+  //           "Here are some ways you might clarify your question:\n\n" +
+  //           "- I was accused of cyber libel for posting a private message online.\n" +
+  //           "- They claim I defamed someone through Facebook comments.\n" +
+  //           "- The message involved a public figure.\n\n" +
+  //           "You can click on one of these or rephrase your query.",
+  //         role: "",
+  //       });
+
+  //       setMessages(fullChat);
+  //       setIsTyping(false);
+  //       return;
+  //     }
+
+  //     // Step 3: Then enhance the normalized query
+  //     const enhancerRes = await fetch(`${BASE_URL}/agents/prompt-enhancer`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ normalized_query: intake.response }), // ✅ intake.response is normalized
+  //     });
+  //     const enhancer = await enhancerRes.json();
+
+  //     // Step 3: ResearchAgent
+  //     const researchRes = await fetch(`${BASE_URL}/agents/research`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ enhanced_query: enhancer.response }),
+  //     });
+  //     const research = await researchRes.json();
+
+  //     // Step 4: WriteAgent
+  //     let facts = "";
+  //     try {
+  //       const parsed = JSON.parse(intake.response);
+  //       facts = parsed.key_facts || "";
+  //     } catch {
+  //       console.warn("⚠️ Failed to parse intake response as JSON.");
+  //     }
+
+  //     // Step 4: WriteAgent
+  //     const writeRes = await fetch(`${BASE_URL}/agents/write`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         research_notes: research.response,
+  //         facts,
+  //       }),
+  //     });
+  //     const write = await writeRes.json();
+
+  //     // Step 5: ReviewAgent
+  //     const reviewRes = await fetch(`${BASE_URL}/agents/review`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ initial_report: write.response }),
+  //     });
+  //     const review = await reviewRes.json();
+
+  //     // Step 6: JudgeAgent
+  //     const judgeRes = await fetch(`${BASE_URL}/agents/judge`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ reviewed_report: review.response }),
+  //     });
+  //     const judge = await judgeRes.json();
+
+  //     const botReply: ChatMessage = {
+  //       sender: "bot",
+  //       content:
+  //         judge.response ||
+  //         judge.neutral_opinion ||
+  //         "✅ Legal review complete.",
+  //       role: "",
+  //     };
+
+  //     fullChat.push(botReply);
+  //     setMessages(fullChat);
+  //     setPostJudgeChoice("prosecution");
+  //     persistSession(fullChat, generateSmartTitle(userMessage.content));
+  //     setTitle(generateSmartTitle(userMessage.content));
+  //   } catch (err) {
+  //     console.error("Agent pipeline error:", err);
+  //   } finally {
+  //     setIsTyping(false);
+  //   }
+  // };
 
   const handleSelectSession = (session: ChatSession) => {
     setActiveSessionId(session.id);

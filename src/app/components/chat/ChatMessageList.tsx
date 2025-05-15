@@ -1,6 +1,6 @@
 "use client";
 
-import { FC } from "react";
+import { FC, Dispatch, SetStateAction } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import ChatBubble from "./ChatBubble";
 import { ChatMessage } from "@/types/ChatTypes";
@@ -9,7 +9,8 @@ interface Props {
   messages: ChatMessage[];
   isTyping: boolean;
   smartTitle?: string;
-  chatRef: React.RefObject<HTMLDivElement>;
+  chatRef: React.RefObject<HTMLDivElement | null>;
+  setSelectedReference: Dispatch<SetStateAction<string | null>>;
 }
 
 const ChatMessageList: FC<Props> = ({
