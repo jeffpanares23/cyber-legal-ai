@@ -105,6 +105,7 @@ const ChatEmptyState: FC<ChatEmptyStateProps> = ({
             rows={4}
             placeholder="Tell me about the case..."
             className="w-full pr-12 pl-4 py-2 resize-none rounded-md bg-zinc-800 border border-zinc-700 text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 max-h-[200px] overflow-y-auto"
+            style={{ scrollbarWidth: "thin", scrollbarColor: "#4F39F6" }}
           />
           {/* <button
             type="submit"

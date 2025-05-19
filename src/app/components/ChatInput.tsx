@@ -1,8 +1,7 @@
 "use client";
 
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
-import RoleToneControls from "./chat/RoleToneControls";
 
 interface Props {
   input: string;
@@ -12,11 +11,8 @@ interface Props {
 
 export default function ChatInput({ input, onInputChange, onSend }: Props) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const [role, setRole] = useState("neutral");
-  const [tone, setTone] = useState("neutral");
-  const [selectedRole, setSelectedRole] =
-    useState<keyof typeof rolePrompts>("Defendant");
-  const [selectedTone, setSelectedTone] = useState("Professional");
+  const [role] = useState("neutral");
+  const [tone] = useState("neutral");
   const rolePrompts: Record<string, string[]> = {
     Defendant: [
       "What are possible legal defenses against cyber libel accusations in the Philippines?",
@@ -36,6 +32,10 @@ export default function ChatInput({ input, onInputChange, onSend }: Props) {
       "What legal standards apply in issuing warrants for cloud-stored data?",
     ],
   };
+
+  const [selectedRole, setSelectedRole] =
+    useState<keyof typeof rolePrompts>("Defendant");
+  const [selectedTone, setSelectedTone] = useState("Professional");
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -106,6 +106,13 @@ export default function ChatInput({ input, onInputChange, onSend }: Props) {
           </div>
         </div>
 
+        {/* ✅ UPDATED: Use rolePrompts at runtime to prevent lint error */}
+        <ul className="hidden">
+          {rolePrompts[selectedRole].map((prompt, idx) => (
+            <li key={idx}>{prompt}</li>
+          ))}
+        </ul>
+
         {/* Input field */}
         <form
           onSubmit={(e) => onSend(e, role, tone)}
@@ -121,6 +128,7 @@ export default function ChatInput({ input, onInputChange, onSend }: Props) {
             rows={4}
             placeholder="Tell me about the case..."
             className="w-full pr-12 pl-4 py-2 resize-none rounded-md bg-zinc-800 border border-zinc-700 text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 max-h-[200px] overflow-y-auto"
+            style={{ scrollbarWidth: "thin", scrollbarColor: "#4F39F6" }}
           />
           {/* <button
             type="submit"

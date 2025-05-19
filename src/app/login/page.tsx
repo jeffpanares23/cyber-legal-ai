@@ -3,10 +3,11 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image"
+import Image from "next/image";
 import { BASE_URL } from "@/config";
 import GoogleLoginButton from "../components/GoogleLoginButton";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 
 Cookies.set("cyberlegal-auth", "true");
@@ -63,16 +64,16 @@ export default function LoginPage() {
       if (!response.ok) {
         throw new Error(data.detail || "Login failed");
       }
-
+      toast.success(`Welcome, ${data.name}`);
       sessionStorage.setItem("cyberlegal-auth", "true");
       sessionStorage.setItem("access_token", data.access_token);
       sessionStorage.setItem("user_name", data.name);
       setLoginSuccess(true);
       setIsLoggingIn(false);
     } catch (err: unknown) {
-      const errorMsg = err instanceof Error ? err.message : "An error occurred"
-      setIsLoggingIn(false)
-      setError(errorMsg)
+      const errorMsg = err instanceof Error ? err.message : "An error occurred";
+      setIsLoggingIn(false);
+      setError(errorMsg);
     }
   };
 
@@ -124,8 +125,8 @@ export default function LoginPage() {
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-5 py-3 rounded-full bg-[#2A314B] border border-white/10 text-md placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-500 hover:scale-105 transition"
-                placeholder="you@example.com"
+                className="w-full px-5 py-3 rounded-full border border-white/10 text-md placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-500 hover:scale-105 transition"
+                placeholder="Username or Email"
               />
             </div>
             <div className="relative">
@@ -134,7 +135,7 @@ export default function LoginPage() {
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-5 py-3 rounded-full bg-[#2A314B] border border-white/10 text-md placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-500 hover:scale-105 transition"
+                className="w-full px-5 py-3 rounded-full border border-white/10 text-md placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-500 hover:scale-105 transition"
                 placeholder="••••••••"
               />
               <button

@@ -5,7 +5,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-
+import { v4 as uuidv4 } from "uuid";
 import ChatSidebar from "../components/ChatSidebar";
 import ChatEmptyState from "../components/ChatEmptyState";
 import ChatInput from "../components/ChatInput";
@@ -17,6 +17,11 @@ import { ChatMessage, ChatSession, SourceItem } from "@/types/ChatTypes";
 import { saveChatSessions, loadChatSessions } from "@/utils/chatStorage";
 import { useAutoScroll } from "../hooks/useAutoScroll";
 import { BASE_URL } from "../../config";
+
+type ResearchSource = {
+  file_name?: string;
+  url?: string;
+};
 
 function generateSmartTitle(input: string): string {
   const trimmed = input.trim().toLowerCase();
@@ -55,8 +60,11 @@ export default function ChatbotPage() {
   const [postJudgeChoice, setPostJudgeChoice] = useState<
     "prosecution" | "defense" | "validate" | null
   >(null);
+  const [multiAgentData, setMultiAgentData] = useState<{
+    reviewed_report?: string;
+    judgment?: string;
+  }>({});
 
-  const [refBoxExpanded, setRefBoxExpanded] = useState(false);
   const [sources, setSources] = useState<{
     rules?: SourceItem[];
     cases?: SourceItem[];
@@ -119,7 +127,7 @@ export default function ChatbotPage() {
 
   const persistSession = (updatedMessages: ChatMessage[], title: string) => {
     const newSession: ChatSession = {
-      id: activeSessionId || crypto.randomUUID(),
+      id: activeSessionId || uuidv4(),
       title,
       createdAt: new Date().toISOString(),
       messages: updatedMessages,
@@ -247,7 +255,10 @@ export default function ChatbotPage() {
       });
 
       const result = await response.json();
-
+      setMultiAgentData({
+        reviewed_report: result.reviewed_report,
+        judgment: result.judgment,
+      });
       // If intake was incomplete
       if (result.status !== "success") {
         const fallbackMsg =
@@ -265,17 +276,55 @@ export default function ChatbotPage() {
       // ✅ Display each agent's output step-by-step
       const agentResponses: { label: string; content: string }[] = [
         { label: "📥 Intake", content: JSON.stringify(result.intake, null, 2) },
-        { label: "🧠 Enhanced Query", content: result.enhanced_query },
-        { label: "📚 Research Notes", content: result.research_notes },
-        { label: "✍️ Legal Memo", content: result.memo },
-        { label: "🔍 Reviewed Report", content: result.reviewed_report },
+        // { label: "🧠 Enhanced Query", content: result.enhanced_query },
+        // { label: "📚 Research Notes", content: result.research_notes },
+        // { label: "✍️ Legal Memo", content: result.memo },
+        // { label: "🔍 Reviewed Report", content: result.reviewed_report },
         { label: "⚖️ Judgment", content: result.judgment },
+        {
+          label: "📚 Research Notes",
+          content:
+            result.research_notes?.sources
+              ?.filter(
+                (src: ResearchSource) =>
+                  src.file_name && src.url && src.url !== "source-not-found"
+              )
+              .map((src: ResearchSource) => `- [${src.file_name}](${src.url})`)
+              .join("\n") || "No valid sources found.",
+        },
       ];
 
       for (const step of agentResponses) {
         fullChat.push({
           sender: "bot",
           content: `### ${step.label}\n${step.content}`,
+          role: "",
+        });
+      }
+
+      if (result.sources && result.sources.length > 0) {
+        setSources({
+          rules: result.sources.map(
+            (src: { file_name: string; url?: string; text?: string }) => ({
+              title: src.file_name,
+              url: src.url,
+              summary:
+                src.text?.split("\n").slice(0, 2).join(" ") + "..." ||
+                "No summary",
+            })
+          ),
+        });
+
+        fullChat.push({
+          sender: "bot",
+          content:
+            `📚 **Sources:**\n` +
+            result.sources
+              .map(
+                (src: { file_name: string; url?: string }) =>
+                  `- [${src.file_name}](${src.url})`
+              )
+              .join("\n"),
           role: "",
         });
       }
@@ -515,8 +564,7 @@ export default function ChatbotPage() {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({
-                              reviewed_report:
-                                messages[messages.length - 1].content,
+                              reviewed_report: multiAgentData.reviewed_report,
                             }),
                           }
                         );
@@ -525,12 +573,13 @@ export default function ChatbotPage() {
                           ...prev,
                           { sender: "bot", content: data.response, role: "" },
                         ]);
-                        setPostJudgeChoice("defense"); // chain or null
+                        setPostJudgeChoice("defense");
                       }}
                       className="bg-red-600 text-white px-4 py-2 rounded"
                     >
                       🔴 Prosecution
                     </button>
+
                     <button
                       onClick={async () => {
                         const res = await fetch(`${BASE_URL}/agents/defense`, {
@@ -546,12 +595,13 @@ export default function ChatbotPage() {
                           ...prev,
                           { sender: "bot", content: data.response, role: "" },
                         ]);
-                        setPostJudgeChoice("validate"); // chain or null
+                        setPostJudgeChoice("validate");
                       }}
                       className="bg-blue-600 text-white px-4 py-2 rounded"
                     >
                       🔵 Defense
                     </button>
+
                     <button
                       onClick={async () => {
                         const res = await fetch(`${BASE_URL}/agents/validate`, {
@@ -571,7 +621,7 @@ export default function ChatbotPage() {
                           ...prev,
                           { sender: "bot", content: data.response, role: "" },
                         ]);
-                        setPostJudgeChoice(null);
+                        setPostJudgeChoice(null); // End of chain
                       }}
                       className="bg-green-600 text-white px-4 py-2 rounded"
                     >
