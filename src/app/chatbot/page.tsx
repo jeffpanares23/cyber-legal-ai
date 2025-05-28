@@ -602,7 +602,7 @@ export default function ChatbotPage() {
                       🔵 Defense
                     </button>
 
-                    <button
+                    {/* <button
                       onClick={async () => {
                         const res = await fetch(`${BASE_URL}/agents/validate`, {
                           method: "POST",
@@ -626,7 +626,7 @@ export default function ChatbotPage() {
                       className="bg-green-600 text-white px-4 py-2 rounded"
                     >
                       ✅ Validate
-                    </button>
+                    </button> */}
                   </div>
                 )}
               </div>
