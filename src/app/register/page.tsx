@@ -3,9 +3,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image"
+import Image from "next/image";
 import { BASE_URL } from "@/config";
-
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
@@ -34,10 +33,11 @@ export default function RegisterPage() {
         throw new Error(data.detail || "Registration failed");
       }
 
-      router.push("/login");
+      // router.push("/login");
+      router.push(`/login?email=${encodeURIComponent(email)}`);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Unknown error"
-      setError(message)
+      const message = err instanceof Error ? err.message : "Unknown error";
+      setError(message);
     } finally {
       setIsRegistering(false);
     }

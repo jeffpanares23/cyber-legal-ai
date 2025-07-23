@@ -63,7 +63,7 @@ const ChatEmptyState: FC<ChatEmptyStateProps> = ({
         What legal question do you have in mind?
       </h2>
 
-      <div className="border border-zinc-700 rounded-lg shadow-md w-full px-4 sm:px-6 py-4 sm:py-6 space-y-6">
+      <div className="bg-[#1d2532] border border-zinc-700 rounded-lg shadow-md w-full px-4 sm:px-6 py-4 sm:py-6 space-y-6">
         {/* Role + Tone Dropdowns */}
         <div className="flex sm:flex-row gap-3 sm:gap-4 text-xs text-zinc-300">
           <div className="flex items-center gap-1">
@@ -73,7 +73,7 @@ const ChatEmptyState: FC<ChatEmptyStateProps> = ({
               onChange={(e) =>
                 setSelectedRole(e.target.value as keyof typeof rolePrompts)
               }
-              className="bg-zinc-800 border border-zinc-700 px-2 py-1 rounded-md text-white cursor-pointer"
+              className="bg-[#494f5b] border border-zinc-700 px-2 py-1 rounded-md text-white cursor-pointer"
             >
               <option>Prosecutor</option>
               <option>Defendant</option>
@@ -85,7 +85,7 @@ const ChatEmptyState: FC<ChatEmptyStateProps> = ({
             <select
               value={selectedTone}
               onChange={(e) => setSelectedTone(e.target.value)}
-              className="bg-zinc-800 border border-zinc-700 px-2 py-1 rounded-md text-white cursor-pointer"
+              className="bg-[#494f5b] border border-zinc-700 px-2 py-1 rounded-md text-white cursor-pointer"
             >
               <option>Professional</option>
               <option>Casual</option>

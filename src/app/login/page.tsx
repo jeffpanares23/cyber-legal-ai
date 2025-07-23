@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { BASE_URL } from "@/config";
 import GoogleLoginButton from "../components/GoogleLoginButton";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 
@@ -23,8 +23,16 @@ export default function LoginPage() {
   // const [loading, setLoading] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
+  const searchParams = useSearchParams();
+  const prefilledEmail = searchParams.get("email");
 
   const router = useRouter();
+
+  useEffect(() => {
+    if (prefilledEmail) {
+      setEmail(prefilledEmail);
+    }
+  }, [prefilledEmail]);
 
   useEffect(() => {
     if (loginSuccess) {
@@ -126,7 +134,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-5 py-3 rounded-full border border-white/10 text-md placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-500 hover:scale-105 transition"
-                placeholder="Username or Email"
+                placeholder="Email"
               />
             </div>
             <div className="relative">
