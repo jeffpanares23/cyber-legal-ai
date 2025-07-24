@@ -1,14 +1,16 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
 @import "tailwindcss";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
+  --background: #111827;
   --foreground: #171717;
 }
 
-@theme inline {
+:root {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
@@ -17,37 +19,48 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #111827;
     --foreground: #ededed;
   }
 }
 
 @layer utilities {
-  .typing-dot {
-    @apply w-2 h-2 rounded-full bg-white;
-    animation: typing-dot 1.4s infinite ease-in-out both;
-  }
-
-  .typing-dot:nth-child(2) {
-    animation-delay: 0.2s;
-  }
-
-  .typing-dot:nth-child(3) {
-    animation-delay: 0.4s;
-  }
-
   @keyframes typing-dot {
-    0%, 80%, 100% {
+    0%,
+    80%,
+    100% {
       transform: scale(0);
     }
     40% {
       transform: scale(1);
     }
   }
+
+  @keyframes bounceDots {
+    0%,
+    80%,
+    100% {
+      transform: scale(0);
+    }
+    40% {
+      transform: scale(1);
+    }
+  }
+  .typing-dot {
+    @apply w-2 h-2 rounded-full bg-white;
+    animation: bounceDots 1.4s infinite both;
+  }
+  .typing-dot:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  .typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
+  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* font-family: Arial, Helvetica, sans-serif; */
+  @apply font-sans;
 }
